@@ -1,7 +1,11 @@
-vim/bundle/*
 !vim/bundle/Vundle.vim/*
-vim/doc/*
-vim/bin/*
+!vim/bundle/
+!vim/bin/
+!vin/backup/
+
+#vim/bundle/*
+#vim/doc/*
+#vim/bin/*
 vim/.netrwhist
 vim/backup/*.s*
 vim/backup/.netrwhis*
