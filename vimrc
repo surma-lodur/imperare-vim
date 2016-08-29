@@ -30,7 +30,6 @@ if has('win32') || has('win64')
   Plugin 'PProvost/vim-ps1.git'   " Syntax Highlighting for PowerShell
 
 else
-
   set shell=/bin/sh
 
   " Textile config
@@ -56,7 +55,7 @@ endif
 " ##  Plugins  ##
 " ###############
 
-Plugin 'VundleVim/Vundle.vim'       " Plugin Manager
+"Plugin 'VundleVim/Vundle.vim'       " Plugin Manager
 Plugin 'kien/ctrlp.vim.git'         " File search by file name
 Plugin 'mileszs/ack.vim.git'        " Full text search via ack-grep or ag
 Plugin 'tomtom/tlib_vim.git'

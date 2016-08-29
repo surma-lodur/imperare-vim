@@ -63,6 +63,7 @@ Enjoy your updates.
 
 ## Roadmap
 
+* Autoupdate for Vundle without remove initialeasy setup
 * Shortcut help for used Plugins
 * Theme toggle script instead of change backgound
 
