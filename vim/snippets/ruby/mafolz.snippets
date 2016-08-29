@@ -1,0 +1,103 @@
+# #!/usr/bin/env ruby
+
+snippet sep
+	#####${2:}
+	##  ${1:name}  ##
+	#####$2
+	${3}
+
+snippet pry
+	puts "#{ '$' * 45}DEBUGGER"
+	puts "#{__FILE__}:#{__LINE__}"
+	binding.pry
+
+snippet mcom
+	##
+	# ${1}
+	#
+	# == Parameter
+	# * +${2}+	
+	#
+	# == Format
+	# ${3}
+	#
+	# == Returns
+	# ${4}
+	#
+
+snippet cdef
+	def ${1:}${2}
+		${4}
+	end # ${3}$1
+
+snippet cself
+	class << self
+		${2}
+	end # class << self
+
+snippet cmod
+	module ${1:}
+		${2}
+	end # $1
+
+snippet class
+	class ${1:}
+		${2}
+	end # $1
+
+snippet map
+	map do |${1}|
+		$1
+	end # map
+
+snippet context
+	context '${1:}' do
+	${2:}
+	end # context '$1'
+
+snippet describe
+	describe '${1:}' do
+	${2:}
+	end # describe		  '$1'
+
+snippet define
+	def ${1:}${2}
+		${4}
+	end # ${3}$1
+
+snippet com
+	##
+	# ${1}
+	#
+snippet rdl
+	Rails.logger.info ${1}
+
+snippet rdd
+	Rails.logger.debug
+
+snippet rddd
+	@timer = Time.now - @timer if @timer
+	Rails.logger.debug "TIME\t#{@time}"
+	Rails.logger.debug "#{__FILE__}:#{__LINE__}"
+	Rails.logger.debug ${1}
+	@timer = Time.now
+
+snippet llog
+	Rails.logger.info "#{ '$' * 45}MARKE"
+	Rails.logger.info "#{__FILE__}:#{__LINE__}"
+	Rails.logger.info "#{ '$' * 50}"
+	Rails.logger.info ${1}.inspect
+	Rails.logger.info "#{ '$' * 50}"
+
+snippet pputs
+	puts "#{ '$' * 45}MARKE"
+	puts "#{__FILE__}:#{__LINE__}"
+	puts "#{ '$' * 50}"
+	pp ${1}
+	puts "#{ '$' * 50}"
+
+snippet debug
+	require 'ruby-debug'
+	debugger
+
+
