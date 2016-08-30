@@ -1,4 +1,3 @@
-let $PATH.= ';' . $HOME . '/_vim/bin'
 
 set nocompatible              " be iMproved, required
 filetype off                  " required
@@ -8,6 +7,7 @@ filetype off                  " required
 " ##################################
 
 if has('win32') || has('win64')
+  let $PATH.= ';' . $HOME . '/_vim/bin'
   set runtimepath=$HOME/_vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/_vim/after
 
   " Textile config
@@ -55,16 +55,17 @@ endif
 " ##  Plugins  ##
 " ###############
 
-"Plugin 'VundleVim/Vundle.vim'       " Plugin Manager
+Plugin 'VundleVim/Vundle.vim'        " Plugin Manager
 Plugin 'kien/ctrlp.vim.git'          " File search by file name
 Plugin 'mileszs/ack.vim.git'         " Full text search via ack-grep or ag
 Plugin 'tomtom/tlib_vim.git'
 Plugin 'MarcWeber/vim-addon-mw-utils.git'
 Plugin 'garbas/vim-snipmate.git'      " 
 " Plugin 'honza/vim-snippets'         " Enable this to get some predefined Snippets for different languages
+Plugin 'taglist.vim'                  " provides  a method tree per file
 Plugin 'ervandew/supertab.git'
 Plugin 'bling/vim-airline.git'        " Colourfull status line
-Plugin 'taglist.vim'                  " provides  a method tree per file
+
 
 Plugin 'firat/vim-bufexplorer.git'    " Explore open files
 Plugin 'tpope/vim-git.git'            " Git Support
@@ -77,7 +78,7 @@ Plugin 'wycats/nerdtree.git'          " Directory Tree
 " ########################
 Plugin 'fatih/vim-go.git'             " Go-Lang
 Plugin 'othree/yajs.vim.git'          " Javascript
-Plugin 'timcharper/textile.vim.git'   " Textile
+" Plugin 'timcharper/textile.vim.git'   " Textile
 Plugin 'scrooloose/syntastic.git'     " Display synax errors of many languages
 
 " ##############

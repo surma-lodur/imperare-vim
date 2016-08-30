@@ -26,9 +26,13 @@ snippet mcom
 	#
 
 snippet cdef
-	def ${1:}${2}
+	def ${1:}(${2})
 		${4}
-	end # ${3}$1
+	end # .$1
+snippet mdef
+	def ${1:}(${2})
+		${4}
+	end # #$1
 
 snippet cself
 	class << self
