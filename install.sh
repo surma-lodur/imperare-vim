@@ -1,3 +1,5 @@
-#! env bash
+#!/usr/bin/env bash
 
-echo 'will be done soon'
+ln -sf `pwd`/vim $HOME/.vim
+ln -sf `pwd`/vimrc $HOME/.vimrc
+

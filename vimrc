@@ -48,7 +48,7 @@ else
   call vundle#begin()
 
   " ack grep
-  let g:ackprg="ack-grep -H --nocolor --nogroup --column"
+  let g:ackprg="ag --nocolor --nogroup --column"
 endif
 
 " ###############
@@ -56,12 +56,12 @@ endif
 " ###############
 
 "Plugin 'VundleVim/Vundle.vim'       " Plugin Manager
-Plugin 'kien/ctrlp.vim.git'         " File search by file name
-Plugin 'mileszs/ack.vim.git'        " Full text search via ack-grep or ag
+Plugin 'kien/ctrlp.vim.git'          " File search by file name
+Plugin 'mileszs/ack.vim.git'         " Full text search via ack-grep or ag
 Plugin 'tomtom/tlib_vim.git'
 Plugin 'MarcWeber/vim-addon-mw-utils.git'
-Plugin 'garbas/vim-snipmate.git'
-Plugin 'honza/vim-snippets'
+Plugin 'garbas/vim-snipmate.git'      " 
+" Plugin 'honza/vim-snippets'         " Enable this to get some predefined Snippets for different languages
 Plugin 'ervandew/supertab.git'
 Plugin 'bling/vim-airline.git'        " Colourfull status line
 Plugin 'taglist.vim'                  " provides  a method tree per file
@@ -107,7 +107,7 @@ filetype plugin indent on    " required
 " ##  Plugin Configuration  ##
 " ############################
 
-colorscheme pt_black
+colorscheme summerfruit256
 
 set number
 set ruler
@@ -202,15 +202,6 @@ if exists('+colorcolumn')
 else
   " Emulate
   au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%85v.\+', -1)
-endif
-
-" Include user's local vim config
-if filereadable(expand("~/.vimrc.local"))
-  source ~/.vimrc.local
-endif
-
-if filereadable(expand("$HOME/_vimrc.local"))
-  source $HOME/_vimrc.local
 endif
 
 " GUI Settings
@@ -310,4 +301,8 @@ au FileType go nmap <leader>c <Plug>(go-coverage)
 " Include user's local vim config
 if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
+endif
+
+if filereadable(expand("$HOME/_vimrc.local"))
+  source $HOME/_vimrc.local
 endif
