@@ -60,7 +60,7 @@ Plugin 'kien/ctrlp.vim.git'          " File search by file name
 Plugin 'mileszs/ack.vim.git'         " Full text search via ack-grep or ag
 Plugin 'tomtom/tlib_vim.git'
 Plugin 'MarcWeber/vim-addon-mw-utils.git'
-Plugin 'garbas/vim-snipmate.git'      " 
+Plugin 'garbas/vim-snipmate.git'      "
 " Plugin 'honza/vim-snippets'         " Enable this to get some predefined Snippets for different languages
 Plugin 'taglist.vim'                  " provides  a method tree per file
 Plugin 'ervandew/supertab.git'
@@ -108,7 +108,8 @@ filetype plugin indent on    " required
 " ##  Plugin Configuration  ##
 " ############################
 
-colorscheme summerfruit256
+"colorscheme summerfruit256
+colorscheme monokai
 
 set number
 set ruler
@@ -273,8 +274,6 @@ map <leader>p :bp
 " Copy paste to system clipboard
 map <leader>x  "+y
 map <leader>v  "+gP
-map <c-c> "+y
-map <c-v>  "+gP
 
 
 "map <C-N> :NERDTreeFind<cr>
@@ -297,6 +296,7 @@ au FileType go nmap <leader>b <Plug>(go-build)
 au FileType go nmap <leader>t <Plug>(go-test)
 au FileType go nmap <leader>c <Plug>(go-coverage)
 
+map <F4> :%s/\s\+$//e
 
 
 " Include user's local vim config
