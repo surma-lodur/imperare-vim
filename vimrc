@@ -58,7 +58,7 @@ endif
 Plugin 'VundleVim/Vundle.vim'        " Plugin Manager
 Plugin 'kien/ctrlp.vim.git'          " File search by file name
 Plugin 'mileszs/ack.vim.git'         " Full text search via ack-grep or ag
-Plugin 'tomtom/tlib_vim.git'
+Plugin 'tomtom/tlib_vim.git'         " Needed for snipmate
 Plugin 'MarcWeber/vim-addon-mw-utils.git'
 Plugin 'garbas/vim-snipmate.git'      "
 " Plugin 'honza/vim-snippets'         " Enable this to get some predefined Snippets for different languages
@@ -66,20 +66,22 @@ Plugin 'taglist.vim'                  " provides  a method tree per file
 Plugin 'ervandew/supertab.git'
 Plugin 'bling/vim-airline.git'        " Colourfull status line
 
-
 Plugin 'firat/vim-bufexplorer.git'    " Explore open files
 Plugin 'tpope/vim-git.git'            " Git Support
 Plugin 'tpope/vim-fugitive.git'       " f.e. git blame integration
 Plugin 'scrooloose/nerdcommenter.git' " commenting functionality
 Plugin 'wycats/nerdtree.git'          " Directory Tree
 
+Plugin 'ngmy/vim-rubocop.git'
+Plugin 'stephpy/vim-yaml.git'
+
 " ########################
 " ##  language support  ##
 " ########################
 Plugin 'fatih/vim-go.git'             " Go-Lang
-Plugin 'othree/yajs.vim.git'          " Javascript
-" Plugin 'timcharper/textile.vim.git'   " Textile
-Plugin 'scrooloose/syntastic.git'     " Display synax errors of many languages
+"Plugin 'othree/yajs.vim.git'          " Javascript
+Plugin 'vim-syntastic/syntastic.git'     " Display synax errors of many languages
+"Plugin 'chrisbra/csv.vim'
 
 " ##############
 " ##  themes  ##
@@ -92,7 +94,6 @@ Plugin 'yantze/pt_black.git'
 " Invertable color theme
 Plugin 'noahfrederick/vim-hemisu.git'
 Plugin 'rakr/vim-two-firewatch'
-
 Plugin 'mkarmona/materialbox.git'
 
 " light theme
@@ -110,6 +111,8 @@ filetype plugin indent on    " required
 
 "colorscheme summerfruit256
 colorscheme monokai
+hi Normal ctermbg=none
+highlight NonText ctermbg=none
 
 set number
 set ruler
@@ -224,6 +227,8 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 
+"let g:syntastic_ruby_checkers = ['rubocop', 'mri' ]
+
 
 " ####################
 " ##  key mappings  ##
@@ -298,7 +303,7 @@ au FileType go nmap <leader>c <Plug>(go-coverage)
 
 map <F4> :%s/\s\+$//e
 
-
+let g:vimrubocop_config = '~/.vim/rubocop.yml'
 " Include user's local vim config
 if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
@@ -307,3 +312,5 @@ endif
 if filereadable(expand("$HOME/_vimrc.local"))
   source $HOME/_vimrc.local
 endif
+hi Normal ctermbg=none
+highlight NonText ctermbg=none
