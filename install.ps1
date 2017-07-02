@@ -55,5 +55,5 @@ $wc.DownloadFile($url, $output)
 Write-Output "Time taken: $((Get-Date).Subtract($start_time).Seconds) second(s)"
 
 "Link Paths"
-invoke-expression "fsutil hardlink create $env:userprofile\_vimrc $PSScriptRoot\vimrc"
+invoke-expression "mklink /H $env:userprofile\_vimrc $PSScriptRoot\vimrc"
 invoke-expression "cmd /c $PSScriptRoot\vim\bin\junction  %userprofile%\_vim %cd%\vim"

@@ -4,6 +4,18 @@ Cross-Platform Vim Distribution.
 This distributions main goal is a lightweigt and easy installable Vim distributions.
 Therefore they will get more and more start help to switch to vim within this distribution.
 
+# Tutor
+
+There exists a tutor, which gudes you through the differend plugins and Vim commands.
+
+The search has different difficulty parts.
+
+    :help easy
+    :help medium
+    :help hard
+
+
+
 ## Requirements
 
 Windows/Linux and Mac supported.
@@ -22,13 +34,13 @@ The §PATH will not been adjust.
 
 install ctags and ag
 
-  aptitude install ctags ag
+    aptitude install ctags ag
 
 ### Mac
 
 TBD
 
-## Optional
+### Optional
 
 For display a correct Powerline download and install one of the Powerline Fonts:
 
@@ -46,6 +58,15 @@ Then do
     ./install.sh
     or ./install.ps1
 
+
+## Roadmap
+
+* Autoupdate for Vundle without remove initialeasy setup
+* Shortcut help for used Plugins
+* Theme toggle script instead of change backgound
+
+## Advanced
+
 ### Install new Plugins 
 
 Open vim and type :PluginInstall
@@ -61,12 +82,6 @@ If the update are completed, you can watch the changelogs with u.
 
 Enjoy your updates.
 
-## Roadmap
-
-* Autoupdate for Vundle without remove initialeasy setup
-* Shortcut help for used Plugins
-* Theme toggle script instead of change backgound
-
-## Customization
+### Customization
 
 You can add your own configurations in ~/.vimrc.local to customize the config to your needs.

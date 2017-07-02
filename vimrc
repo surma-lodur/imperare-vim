@@ -6,7 +6,7 @@ filetype off                  " required
 " ##  Platform specific settings  ##
 " ##################################
 
-if has('win32') || has('win64')
+if has('win32') || has('win64') || has('win32unix') || has('win95')
   let $PATH.= ';' . $HOME . '/_vim/bin'
   set runtimepath=$HOME/_vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/_vim/after
 
@@ -27,7 +27,9 @@ if has('win32') || has('win64')
 
   call vundle#begin(path)
 
-  Plugin 'PProvost/vim-ps1.git'   " Syntax Highlighting for PowerShell
+  "Plugin 'PProvost/vim-ps1.git'   " Syntax Highlighting for PowerShell
+  "helptags ~/_vim/doc/*
+  let g:vimrubocop_config = '~/_vim/rubocop.yml'
 
 else
   set shell=/bin/sh
@@ -49,6 +51,8 @@ else
 
   " ack grep
   let g:ackprg="ag --nocolor --nogroup --column"
+  "helptags ~/.vim/doc/*
+  let g:vimrubocop_config = '~/.vim/rubocop.yml'
 endif
 
 " ###############
@@ -88,18 +92,18 @@ Plugin 'vim-syntastic/syntastic.git'     " Display synax errors of many language
 " ##############
 
 " Black
-Plugin 'sickill/vim-monokai.git'
-Plugin 'yantze/pt_black.git'
+"Plugin 'sickill/vim-monokai.git'
+"Plugin 'yantze/pt_black.git'
 
 " Invertable color theme
-Plugin 'noahfrederick/vim-hemisu.git'
-Plugin 'rakr/vim-two-firewatch'
-Plugin 'mkarmona/materialbox.git'
+"Plugin 'noahfrederick/vim-hemisu.git'
+"Plugin 'rakr/vim-two-firewatch'
+"Plugin 'mkarmona/materialbox.git'
+Plugin 'morhetz/gruvbox'
 
 " light theme
-Plugin 'vim-scripts/summerfruit256.vim.git'
-Plugin 'vim-scripts/proton.git'
-
+"Plugin 'vim-scripts/summerfruit256.vim.git'
+"Plugin 'vim-scripts/proton.git'
 
 call vundle#end()
 filetype plugin indent on    " required
@@ -110,7 +114,9 @@ filetype plugin indent on    " required
 " ############################
 
 "colorscheme summerfruit256
-colorscheme monokai
+colorscheme gruvbox
+let g:gruvbox_italic = 0
+
 hi Normal ctermbg=none
 highlight NonText ctermbg=none
 
@@ -119,6 +125,7 @@ set ruler
 syntax on
 
 set encoding=utf-8      " Set encoding
+set nofoldenable    " disable folding
 
 " Whitespace stuff
 set wrap
@@ -128,23 +135,43 @@ set softtabstop=2
 set expandtab
 set list listchars=tab:\ \ ,trail:·
 
+" Set cursor highlighting
+set cursorline
+"set cursorcolumn
 
-" Searching
-"set hlsearch
-"set incsearch
-"set ignorecase
-"set smartcase
+" GUI Settings
+":set guioptions-=m  "remove menu bar
+:set guioptions-=T  "remove toolbar
+:set guioptions-=r  "remove right-hand scroll bar
+:set lines=55 columns=150
 
-" Tab completion
-set wildmode=list:longest,list:full
-set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/plugins/*,temp_gems/*,tmp/*,public/*,.bundler/*
+" allow backspacing over everything in insert mode
+set backspace=indent,eol,start
 
-" Status bar
-set laststatus=2
-let g:airline_powerline_fonts=1
-let g:airline_enable_fugitive=1
+" load the plugin and indent settings for the detected filetype
+filetype plugin indent on
 
-" own syntax definitions
+
+" Use modeline overrides
+set modeline
+set modelines=10
+
+" set line limit bar
+" VIM 7.3+ has support for highlighting a specified column.
+if exists('+colorcolumn')
+  set colorcolumn=140
+else
+  " Emulate
+  au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%85v.\+', -1)
+endif
+
+" Vertical split right and split below
+set splitright
+set splitbelow
+
+" ##############################
+" ##  Own Syntax Definitions  ##
+" ##############################
 
 " Thorfile, Rakefile, Vagrantfile and Gemfile are Ruby
 au BufRead,BufNewFile {Guardfile,Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set ft=ruby
@@ -158,8 +185,22 @@ au BufNewFile,BufRead *.{json,node} set ft=javascript
 " arduino
 au BufNewFile,BufRead *.ino set ft=cpp
 
-au BufRead,BufNewFile *.txt call s:setupWrapping()
+" #######################
+" ##  Disable Plugins  ##
+" #######################
 
+" Manage Script packages vba
+let g:loaded_vimballPlugin = 1
+" Convert current view to HTML
+let g:loaded_2html_plugin = 1
+
+" ############################
+" ##  Plugin Configuration  ##
+" ############################
+
+" Tab completion
+set wildmode=list:longest,list:full
+set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/plugins/*,temp_gems/*,tmp/*,public/*,.bundler/*
 
 " CtrlP config
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.orig,*.org,*.jpg,*.png,*.gif,*.svg,*.swf,*.mp4*,*.flv
@@ -168,23 +209,10 @@ let g:ctrlp_custom_ignore = {
       \'file': '\v\.(exe|so|dll|orig)$'
       \}
 
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
-
-" load the plugin and indent settings for the detected filetype
-filetype plugin indent on
-
-
-" Use modeline overrides
-set modeline
-set modelines=10
-
-
-
-" Vertical split right and split below
-set splitright
-set splitbelow
-
+" Status bar - Airline
+set laststatus=2
+let g:airline_powerline_fonts=1
+let g:airline_enable_fugitive=1
 
 " NERDTree - toggle
 " Open the current buffer in the NERDTree
@@ -195,26 +223,10 @@ let g:bufExplorerSortBy='mru'
 
 " configure taglist.vim
 let Tlist_Compact_Format = 1
-let Tlist_Use_Right_Window = 0
+let Tlist_Use_Right_Window = 1
 let Tlist_Auto_Update = 1
 let Tlist_WinWidth = 50
 
-
-" set line limit bar
-" VIM 7.3+ has support for highlighting a specified column.
-if exists('+colorcolumn')
-  set colorcolumn=140
-else
-  " Emulate
-  au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%85v.\+', -1)
-endif
-
-" GUI Settings
-":set guioptions-=m  "remove menu bar
-:set guioptions-=T  "remove toolbar
-":set guioptions-=r  "remove right-hand scroll bar
-"
-"
 "Syntax Checker
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -229,11 +241,9 @@ let g:syntastic_check_on_wq = 0
 
 "let g:syntastic_ruby_checkers = ['rubocop', 'mri' ]
 
-
 " ####################
 " ##  key mappings  ##
 " ####################
-
 
 " Leader setting
 let mapleader = ","
@@ -258,11 +268,9 @@ map <leader>gs :CtrlP spec<cr>
 " Normal mode: <Leader>e
 map <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
 
-
 " Inserts the path of the currently edited file into a command
 " Command mode: Ctrl+P
 cmap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
-
 
 " Switch between the last two files
 nnoremap <leader><leader> <c-^>
@@ -273,13 +281,9 @@ map <C-L> <C-W><C-L>
 map <C-J> <C-W><C-J>
 map <C-K> <C-W><C-K>
 
-map <leader>n :bn
-map <leader>p :bp
-
 " Copy paste to system clipboard
 map <leader>x  "+y
 map <leader>v  "+gP
-
 
 "map <C-N> :NERDTreeFind<cr>
 map <F2> :NERDTreeToggle<CR>
@@ -295,6 +299,10 @@ map <F12> :BufExplorer<CR>
 " currently open into vim
 map <leader>m :TlistToggle<CR>
 
+" switch theme
+nmap <F5> :set background=dark<CR>
+nmap <F6> :set background=light<CR>
+
 " Golang
 au FileType go nmap <leader>r <Plug>(go-run)
 au FileType go nmap <leader>b <Plug>(go-build)
@@ -303,7 +311,6 @@ au FileType go nmap <leader>c <Plug>(go-coverage)
 
 map <F4> :%s/\s\+$//e
 
-let g:vimrubocop_config = '~/.vim/rubocop.yml'
 " Include user's local vim config
 if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
@@ -312,5 +319,3 @@ endif
 if filereadable(expand("$HOME/_vimrc.local"))
   source $HOME/_vimrc.local
 endif
-hi Normal ctermbg=none
-highlight NonText ctermbg=none

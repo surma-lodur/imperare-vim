@@ -6,5 +6,4 @@ vim/bundle/*
 vim/doc/*
 vim/bin/*
 vim/.netrwhist
-vim/backup/*.s*
-vim/backup/.netrwhis*
+vim/backup/*
