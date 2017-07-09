@@ -1,0 +1,192 @@
+*tutor.txt* This help guides you to the basic functions
+of the installed plugins.
+
+It also provide you with further introduction into VIM.
+
+The *tutor* is devided into ifferend difficulty parts.
+
+|easy|   -> Show you basic VIM and plugin usage to
+          replace your current used editor completely
+
+|medium| -> Will teach you to get faster with VIM
+
+|hard|   -> Understand VIM behaviour deeper to
+          configure the behaviour by own needs.
+
+Note |medium| and |hard| are still TBD
+
+
+
+
+
+Help Notes for *Beginner* VIM users
+               ____    __    ___  _  _ ~
+              ( ___)  /__\  / __)( \/ )~
+               )__)  /(__)\ \__ \ \  / ~
+              (____)(__)(__)(___/ (__) ~
+
+======================================================
+CONTENT    															    		  *easy*
+
+    1. |Navigation| ....................
+    2. |Edit| ..........................
+    3. |ManageOpenFiles| ............... (|bufexplorer|)
+    4. |FileSearch| .................... (|ctrlP|)
+    5. |FullTextSearch| ................ (|Ack|)
+    6. |FileExplorer| .................. (|NERDTree|)
+    7. |CommentHelper| ................. (|NERDCommenter|)
+    8. |Git| ........................... (|Git|,|Fugitive|)
+
+
+
+======================================================
+NAVIGATION                                  *Navigation*
+
+<leader><leader>
+    Jump to last open file
+
+<C-H>, <C-L>, <C-J>, <C-K>
+    Jump between open Windows
+
+:e {filename}
+    Open a file, you hafe to enter the full path.
+    Tab completion works.
+
+<leader>e {filename}
+    Open a file from directory of current open file.
+    Tab completion works.
+
+======================================================
+EDIT FILES                                        *Edit*
+
+
+======================================================
+MANAGE OPENED FILES                    *ManageOpenFiles*
+
+<leader>b, <F12>
+    Shows a list of all open files.
+
+    <CR>    Opens the selected file
+    d       Close selected file (you have to reopen it
+            via NERDTree or :e if desired)
+
+======================================================
+SEARCH FOR FILE NAMES                       *FileSearch*
+
+
+<leader>f
+    Search for file names
+
+<leader>gf
+    Search for files only in the directory from current
+    open file
+
+
+======================================================
+SEARCH FOR PATTERN WITHIN FILES         *FullTextSearch*
+
+
+The results of this search appears into a quickfix
+window.
+
+
+:Ack {pattern} [{directory}]
+    You can search in every file with this command.
+    Add the directory if you don't want to search into
+    the whole project.
+
+
+======================================================
+OPEN A FILE TREE OF CURRENT DIR           *FileExplorer*
+
+<F2>
+    Toggle the File explorer.
+    Navigate with h,j,k,l or arrow keys.
+
+o,<CR>
+    Open selected file or direcotry.
+
+i
+    Open the selected item in a splitted window.
+
+P
+    Jump to parrent node
+
+I
+    Display hidden files
+
+
+======================================================
+COMMENT CODE OUT AND IN                  *CommentHelper*
+
+[count]<Leader>cc
+    Comment out the current line or text selected in
+    visual mode.
+
+[count]<Leader>cn
+    Same as <Leader>cc but forces nesting.
+
+[count]<Leader>ci
+    Toggles the comment state of the selected line(s)
+    individually.
+
+[count]<Leader>cu
+    Uncomments the selected line(s).
+
+======================================================
+ADDITIONAL GIT HELPER WITH UI SUPPORT              *Git*
+
+:Git! [args]
+    Execute given git commands.
+    The result apears in Git as editable file.
+
+:Gstatus
+    Execute git status
+    You will see the result as a quickfix window and
+    can interact with the entries.
+
+    g?    Show additional help
+    -     Add/Reset the selected item
+    cA    Append selected item to last commit with
+          --amend and current HEAD message
+    ca    Like cA but prompt for message
+    dp    git diff for selected file
+
+:Gdiff [args]
+    git diff of current file.
+
+:Gvdiff [args]
+    Diff of current file, but split vertically.
+
+:Gblame [args]
+    Execute a git blame, so you will see each autor
+    Per lines in a left windows.
+
+    g?    Show additional help
+
+
+
+
+
+Help Notes for *intermedian* VIM users
+                          _ _                        ~
+           /\/\   ___  __| (_)_   _ _ __ ___         ~
+          /    \ / _ \/ _` | | | | | '_ ` _ \        ~
+         / /\/\ \  __/ (_| | | |_| | | | | | |       ~
+         \/    \/\___|\__,_|_|\__,_|_| |_| |_|       ~
+                                                     ~
+======================================================
+CONTENT                                         *medium*
+
+Help Notes for *Advance* VIM users
+ ,--.-,,-,--,   ,---.                               ~
+/==/  /|=|  | .--.'  \      .-.,.---.   _,..---._   ~
+|==|_ ||=|, | \==\-/\ \    /==/  `   \/==/,   -  \  ~
+|==| ,|/=| _| /==/-|_\ |  |==|-, .=., |==|   _   _\ ~
+|==|- `-' _ | \==\,   - \ |==|   '='  /==|  .=.   | ~
+|==|  _     | /==/ -   ,| |==|- ,   .'|==|,|   | -| ~
+|==|   .-. ,\/==/-  /\ - \|==|_  . ,'.|==|  '='   / ~
+/==/, //=/  |\==\ _.\=\.-'/==/  /\ ,  )==|-,   _`/  ~
+`--`-' `-`--` `--`        `--`-`--`--'`-.`.____.'   ~
+======================================================
+CONTENT                                           *hard*

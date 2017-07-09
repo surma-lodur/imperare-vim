@@ -3,7 +3,6 @@
 !vin/backup/
 
 vim/bundle/*
-vim/doc/*
 vim/bin/*
 vim/.netrwhist
 vim/backup/*
