@@ -158,12 +158,12 @@ set modelines=10
 
 " set line limit bar
 " VIM 7.3+ has support for highlighting a specified column.
-if exists('+colorcolumn')
-  set colorcolumn=140
-else
-  " Emulate
-  au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%85v.\+', -1)
-endif
+"if exists('+colorcolumn')
+  "set colorcolumn=140
+"else
+   "Emulate
+  "au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%85v.\+', -1)
+"endif
 
 " Vertical split right and split below
 set splitright
@@ -302,6 +302,7 @@ map <leader>m :TlistToggle<CR>
 " switch theme
 nmap <F5> :set background=dark<CR>
 nmap <F6> :set background=light<CR>
+nmap <F7> :hi Normal ctermbg=none<CR>:highlight NonText ctermbg=none<CR>
 
 " Golang
 au FileType go nmap <leader>r <Plug>(go-run)
