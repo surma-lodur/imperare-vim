@@ -76,13 +76,13 @@ Plugin 'tpope/vim-fugitive.git'       " f.e. git blame integration
 Plugin 'scrooloose/nerdcommenter.git' " commenting functionality
 Plugin 'wycats/nerdtree.git'          " Directory Tree
 
-Plugin 'ngmy/vim-rubocop.git'
+"Plugin 'ngmy/vim-rubocop.git'         " autoformat Ruby Code
 Plugin 'stephpy/vim-yaml.git'
 
 " ########################
 " ##  language support  ##
 " ########################
-Plugin 'fatih/vim-go.git'             " Go-Lang
+"Plugin 'fatih/vim-go.git'             " Go-Lang
 "Plugin 'othree/yajs.vim.git'          " Javascript
 Plugin 'vim-syntastic/syntastic.git'     " Display synax errors of many languages
 "Plugin 'chrisbra/csv.vim'
