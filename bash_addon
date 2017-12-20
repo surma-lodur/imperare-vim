@@ -1,6 +1,8 @@
-
+alias st='spring stop'
 alias be='bundle exec'
+alias gitlg="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 export GIT_MERGE_AUTOEDIT=no
+export CF_DIAL_TIMEOUT=10
 export VM=true
 
 

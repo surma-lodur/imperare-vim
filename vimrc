@@ -60,7 +60,7 @@ endif
 " ###############
 
 Plugin 'VundleVim/Vundle.vim'        " Plugin Manager
-Plugin 'kien/ctrlp.vim.git'          " File search by file name
+Plugin 'ctrlpvim/ctrlp.vim.git'          " File search by file name
 Plugin 'mileszs/ack.vim.git'         " Full text search via ack-grep or ag
 Plugin 'tomtom/tlib_vim.git'         " Needed for snipmate
 Plugin 'MarcWeber/vim-addon-mw-utils.git'
@@ -78,13 +78,33 @@ Plugin 'wycats/nerdtree.git'          " Directory Tree
 
 "Plugin 'ngmy/vim-rubocop.git'         " autoformat Ruby Code
 Plugin 'stephpy/vim-yaml.git'
+Plugin 'isRuslan/vim-es6'
 
 " ########################
 " ##  language support  ##
 " ########################
 "Plugin 'fatih/vim-go.git'             " Go-Lang
 "Plugin 'othree/yajs.vim.git'          " Javascript
-Plugin 'vim-syntastic/syntastic.git'     " Display synax errors of many languages
+if v:version < 800
+  Plugin 'vim-syntastic/syntastic.git'     " Display synax errors of many languages
+  "Syntax Checker
+  set statusline+=%#warningmsg#
+  set statusline+=%{SyntasticStatuslineFlag()}
+  set statusline+=%*
+
+  " Enable syntastic syntax checking
+  let g:syntastic_enable_signs=1
+  let g:syntastic_always_populate_loc_list = 1
+  let g:syntastic_auto_loc_list = 1
+  let g:syntastic_check_on_open = 0
+  let g:syntastic_check_on_wq = 0
+  let g:syntastic_javascript_checkers=['eslint']
+
+  "let g:syntastic_ruby_checkers = ['rubocop', 'mri' ]
+else
+  Plugin 'w0rp/ale'
+  let g:airline#extensions#ale#enabled = 1
+endif
 "Plugin 'chrisbra/csv.vim'
 
 " ##############
@@ -92,7 +112,7 @@ Plugin 'vim-syntastic/syntastic.git'     " Display synax errors of many language
 " ##############
 
 " Black
-"Plugin 'sickill/vim-monokai.git'
+Plugin 'sickill/vim-monokai.git'
 "Plugin 'yantze/pt_black.git'
 
 " Invertable color theme
@@ -117,6 +137,7 @@ filetype plugin indent on    " required
 colorscheme gruvbox
 let g:gruvbox_italic = 0
 
+
 hi Normal ctermbg=none
 highlight NonText ctermbg=none
 
@@ -133,11 +154,15 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 set expandtab
-set list listchars=tab:\ \ ,trail:·
-
+"set list listchars=tab:\ \ ,trail:·
+"set listchars=tab:>·,trail:~,extends:>,precedes:<
+set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
 " Set cursor highlighting
-set cursorline
+"set cursorline
 "set cursorcolumn
+
+set lazyredraw
+"set nolazyredraw
 
 " GUI Settings
 ":set guioptions-=m  "remove menu bar
@@ -227,19 +252,16 @@ let Tlist_Use_Right_Window = 1
 let Tlist_Auto_Update = 1
 let Tlist_WinWidth = 50
 
-"Syntax Checker
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-" Enable syntastic syntax checking
-let g:syntastic_enable_signs=1
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-
-"let g:syntastic_ruby_checkers = ['rubocop', 'mri' ]
+" netrw configure
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+let g:netrw_winsize = 10
+"augroup ProjectDrawer
+  "autocmd!
+  "autocmd VimEnter * :Vexplore
+"augroup END
 
 " ####################
 " ##  key mappings  ##
@@ -285,8 +307,8 @@ map <C-K> <C-W><C-K>
 map <leader>x  "+y
 map <leader>v  "+gP
 
+map <F2> :Vexplore<CR>
 "map <C-N> :NERDTreeFind<cr>
-map <F2> :NERDTreeToggle<CR>
 map <Leader>n :NERDTreeToggle<CR>
 
 " ctags tags file generation for the current directory
