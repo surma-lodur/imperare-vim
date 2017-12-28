@@ -74,7 +74,7 @@ Plugin 'firat/vim-bufexplorer.git'    " Explore open files
 Plugin 'tpope/vim-git.git'            " Git Support
 Plugin 'tpope/vim-fugitive.git'       " f.e. git blame integration
 Plugin 'scrooloose/nerdcommenter.git' " commenting functionality
-Plugin 'wycats/nerdtree.git'          " Directory Tree
+Plugin 'scrooloose/nerdtree.git'          " Directory Tree
 
 "Plugin 'ngmy/vim-rubocop.git'         " autoformat Ruby Code
 Plugin 'stephpy/vim-yaml.git'
@@ -307,7 +307,8 @@ map <C-K> <C-W><C-K>
 map <leader>x  "+y
 map <leader>v  "+gP
 
-map <F2> :Vexplore<CR>
+"map <F2> :Vexplore<CR>
+map <F2> :NERDTreeToggle<CR>
 "map <C-N> :NERDTreeFind<cr>
 map <Leader>n :NERDTreeToggle<CR>
 
