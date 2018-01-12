@@ -137,9 +137,16 @@ filetype plugin indent on    " required
 colorscheme gruvbox
 let g:gruvbox_italic = 0
 
+set background=dark
 
-hi Normal ctermbg=none
-highlight NonText ctermbg=none
+if v:version < 800
+  set lazyredraw
+  "set nolazyredraw
+  set nolazyredraw
+  set ttyfast
+else
+  set nolazyredraw
+endif
 
 set number
 set ruler
@@ -161,8 +168,6 @@ set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
 "set cursorline
 "set cursorcolumn
 
-set lazyredraw
-"set nolazyredraw
 
 " GUI Settings
 ":set guioptions-=m  "remove menu bar
@@ -189,6 +194,10 @@ set modelines=10
    "Emulate
   "au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%85v.\+', -1)
 "endif
+
+hi Normal ctermbg=none
+highlight NonText ctermbg=none
+
 
 " Vertical split right and split below
 set splitright
@@ -307,8 +316,8 @@ map <C-K> <C-W><C-K>
 map <leader>x  "+y
 map <leader>v  "+gP
 
-"map <F2> :Vexplore<CR>
-map <F2> :NERDTreeToggle<CR>
+map <F2> :Vexplore<CR>
+"map <F2> :NERDTreeToggle<CR>
 "map <C-N> :NERDTreeFind<cr>
 map <Leader>n :NERDTreeToggle<CR>
 
@@ -326,6 +335,7 @@ map <leader>m :TlistToggle<CR>
 nmap <F5> :set background=dark<CR>
 nmap <F6> :set background=light<CR>
 nmap <F7> :hi Normal ctermbg=none<CR>:highlight NonText ctermbg=none<CR>
+nmap <F8> :execute ":color ".g:colors_name<CR>
 
 " Golang
 au FileType go nmap <leader>r <Plug>(go-run)
