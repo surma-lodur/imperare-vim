@@ -4,7 +4,7 @@ alias gitlg="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Crese
 export GIT_MERGE_AUTOEDIT=no
 export CF_DIAL_TIMEOUT=10
 export VM=true
-
+#export TERM=screen-256color
 
 parse_git_branch() {
   git name-rev HEAD 2> /dev/null | sed 's#HEAD\ \(.*\)#(git::\1)#'

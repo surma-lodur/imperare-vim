@@ -67,6 +67,12 @@ Then do
 
 ## Advanced
 
+Autoformat JSON:
+    :%!jq .  
+
+Autoformat YML:
+    :%!xmllint --format -q   
+
 ### Install new Plugins 
 
 Open vim and type :PluginInstall

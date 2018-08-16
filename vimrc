@@ -77,14 +77,17 @@ Plugin 'scrooloose/nerdcommenter.git' " commenting functionality
 Plugin 'scrooloose/nerdtree.git'          " Directory Tree
 
 "Plugin 'ngmy/vim-rubocop.git'         " autoformat Ruby Code
-Plugin 'stephpy/vim-yaml.git'
-Plugin 'isRuslan/vim-es6'
 
 " ########################
 " ##  language support  ##
 " ########################
-"Plugin 'fatih/vim-go.git'             " Go-Lang
+Plugin 'fatih/vim-go.git'             " Go-Lang
 "Plugin 'othree/yajs.vim.git'          " Javascript
+Plugin 'stephpy/vim-yaml.git'
+Plugin 'isRuslan/vim-es6'
+Plugin 'kchmck/vim-coffee-script'
+
+
 if v:version < 800
   Plugin 'vim-syntastic/syntastic.git'     " Display synax errors of many languages
   "Syntax Checker
@@ -103,6 +106,9 @@ if v:version < 800
   "let g:syntastic_ruby_checkers = ['rubocop', 'mri' ]
 else
   Plugin 'w0rp/ale'
+  let g:ale_lint_delay = 1000
+  let g:ale_fix_on_save = 1
+  let g:ale_fixers = {'javascript': ['prettier', 'eslint'], 'ruby': ['rubocop']}
   let g:airline#extensions#ale#enabled = 1
 endif
 "Plugin 'chrisbra/csv.vim'
@@ -135,17 +141,17 @@ filetype plugin indent on    " required
 
 "colorscheme summerfruit256
 colorscheme gruvbox
-let g:gruvbox_italic = 0
+"let g:gruvbox_italic = 0
 
 set background=dark
 
 if v:version < 800
-  set lazyredraw
+  "set lazyredraw
   "set nolazyredraw
-  set nolazyredraw
-  set ttyfast
+  "set nolazyredraw
+  "set ttyfast
 else
-  set nolazyredraw
+  "set nolazyredraw
 endif
 
 set number
@@ -165,7 +171,7 @@ set expandtab
 "set listchars=tab:>·,trail:~,extends:>,precedes:<
 set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
 " Set cursor highlighting
-"set cursorline
+set cursorline
 "set cursorcolumn
 
 
@@ -335,11 +341,19 @@ map <leader>m :TlistToggle<CR>
 nmap <F5> :set background=dark<CR>
 nmap <F6> :set background=light<CR>
 nmap <F7> :hi Normal ctermbg=none<CR>:highlight NonText ctermbg=none<CR>
-nmap <F8> :execute ":color ".g:colors_name<CR>
+
+"function ResetColorScheme()
+  "let reset_color= g:colors_name
+  "hi Normal ctermbg=256
+  "highlight NonText ctermbg=256
+  "color default
+  "execute ":color ".reset_color
+"endfunction
+
+nmap <F8> :execute ":color ".g:colors_name <CR>
 
 " Golang
 au FileType go nmap <leader>r <Plug>(go-run)
-au FileType go nmap <leader>b <Plug>(go-build)
 au FileType go nmap <leader>t <Plug>(go-test)
 au FileType go nmap <leader>c <Plug>(go-coverage)
 
