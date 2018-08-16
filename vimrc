@@ -38,7 +38,6 @@ else
   let g:TextileOS="Linux"
   let g:TextileBrowser="chromium-browser"
 
-  set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 9
 
   " Directories for swp files
   set backupdir=~/.vim/backup
@@ -49,10 +48,17 @@ else
 
   call vundle#begin()
 
-  " ack grep
-  let g:ackprg="ag --nocolor --nogroup --column"
-  "helptags ~/.vim/doc/*
-  let g:vimrubocop_config = '~/.vim/rubocop.yml'
+  if has("mac") || has("gui_macvim")
+    set guifont=Liberation\ Mono\ for\ Powerline:h14
+    let g:ackprg="grep -RHi"
+
+  else
+    set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 9
+    " ack grep
+    let g:ackprg="ag --nocolor --nogroup --column"
+    "helptags ~/.vim/doc/*
+    let g:vimrubocop_config = '~/.vim/rubocop.yml'
+  end
 endif
 
 " ###############
