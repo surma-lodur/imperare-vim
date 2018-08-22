@@ -90,32 +90,14 @@ Plugin 'scrooloose/nerdtree.git'          " Directory Tree
 Plugin 'fatih/vim-go.git'             " Go-Lang
 "Plugin 'othree/yajs.vim.git'          " Javascript
 Plugin 'stephpy/vim-yaml.git'
-Plugin 'isRuslan/vim-es6'
+"Plugin 'isRuslan/vim-es6'
 Plugin 'kchmck/vim-coffee-script'
 
 
-if v:version < 800
+if version < 800
   Plugin 'vim-syntastic/syntastic.git'     " Display synax errors of many languages
-  "Syntax Checker
-  set statusline+=%#warningmsg#
-  set statusline+=%{SyntasticStatuslineFlag()}
-  set statusline+=%*
-
-  " Enable syntastic syntax checking
-  let g:syntastic_enable_signs=1
-  let g:syntastic_always_populate_loc_list = 1
-  let g:syntastic_auto_loc_list = 1
-  let g:syntastic_check_on_open = 0
-  let g:syntastic_check_on_wq = 0
-  let g:syntastic_javascript_checkers=['eslint']
-
-  "let g:syntastic_ruby_checkers = ['rubocop', 'mri' ]
 else
   Plugin 'w0rp/ale'
-  let g:ale_lint_delay = 1000
-  let g:ale_fix_on_save = 1
-  let g:ale_fixers = {'javascript': ['prettier', 'eslint'], 'ruby': ['rubocop']}
-  let g:airline#extensions#ale#enabled = 1
 endif
 "Plugin 'chrisbra/csv.vim'
 
@@ -151,13 +133,35 @@ colorscheme gruvbox
 
 set background=dark
 
-if v:version < 800
+if version < 800
   "set lazyredraw
   "set nolazyredraw
   "set nolazyredraw
   "set ttyfast
+  "Syntax Checker
+  set statusline+=%#warningmsg#
+  set statusline+=%{SyntasticStatuslineFlag()}
+  set statusline+=%*
+
+  " Enable syntastic syntax checking
+  let g:syntastic_enable_signs=1
+  let g:syntastic_always_populate_loc_list = 1
+  let g:syntastic_auto_loc_list = 1
+  let g:syntastic_check_on_open = 0
+  let g:syntastic_check_on_wq = 0
+  let g:syntastic_javascript_checkers=['eslint']
+
+  "let g:syntastic_ruby_checkers = ['rubocop', 'mri' ]
 else
-  "set nolazyredraw
+  set nolazyredraw
+
+  let g:ale_lint_delay = 500
+  let g:ale_fix_on_save = 1
+  let g:ale_fixers = {
+        \ 'javascript': ['prettier', 'eslint'],
+        \ 'ruby': ['rubocop'],
+        \ }
+  let g:airline#extensions#ale#enabled = 1
 endif
 
 set number
@@ -200,12 +204,12 @@ set modelines=10
 
 " set line limit bar
 " VIM 7.3+ has support for highlighting a specified column.
-"if exists('+colorcolumn')
-  "set colorcolumn=140
-"else
+if exists('+colorcolumn')
+  set colorcolumn=140
+else
    "Emulate
-  "au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%85v.\+', -1)
-"endif
+  au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%85v.\+', -1)
+endif
 
 hi Normal ctermbg=none
 highlight NonText ctermbg=none
