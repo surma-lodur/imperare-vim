@@ -1,0 +1,12 @@
+
+Metrics/LineLength:
+  Max: 160
+
+Metrics/MethodLength:
+  Max: 50
+
+
+Style/RedundantSelf:
+  Description: "Don't use self where it's not needed."
+  StyleGuide: '#no-self-unless-required'
+  Enabled: false

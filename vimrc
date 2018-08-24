@@ -27,7 +27,6 @@ if has('win32') || has('win64') || has('win32unix') || has('win95')
 
   call vundle#begin(path)
 
-  "Plugin 'PProvost/vim-ps1.git'   " Syntax Highlighting for PowerShell
   "helptags ~/_vim/doc/*
   let g:vimrubocop_config = '~/_vim/rubocop.yml'
 
@@ -37,7 +36,6 @@ else
   " Textile config
   let g:TextileOS="Linux"
   let g:TextileBrowser="chromium-browser"
-
 
   " Directories for swp files
   set backupdir=~/.vim/backup
@@ -66,14 +64,13 @@ endif
 " ###############
 
 Plugin 'VundleVim/Vundle.vim'        " Plugin Manager
-Plugin 'ctrlpvim/ctrlp.vim.git'          " File search by file name
+Plugin 'ctrlpvim/ctrlp.vim.git'      " File search by file name
 Plugin 'mileszs/ack.vim.git'         " Full text search via ack-grep or ag
 Plugin 'tomtom/tlib_vim.git'         " Needed for snipmate
 Plugin 'MarcWeber/vim-addon-mw-utils.git'
 Plugin 'garbas/vim-snipmate.git'      "
 " Plugin 'honza/vim-snippets'         " Enable this to get some predefined Snippets for different languages
 Plugin 'taglist.vim'                  " provides  a method tree per file
-Plugin 'ervandew/supertab.git'
 Plugin 'bling/vim-airline.git'        " Colourfull status line
 
 Plugin 'firat/vim-bufexplorer.git'    " Explore open files
@@ -82,7 +79,6 @@ Plugin 'tpope/vim-fugitive.git'       " f.e. git blame integration
 Plugin 'scrooloose/nerdcommenter.git' " commenting functionality
 Plugin 'scrooloose/nerdtree.git'          " Directory Tree
 
-"Plugin 'ngmy/vim-rubocop.git'         " autoformat Ruby Code
 
 " ########################
 " ##  language support  ##
@@ -92,14 +88,21 @@ Plugin 'fatih/vim-go.git'             " Go-Lang
 Plugin 'stephpy/vim-yaml.git'
 "Plugin 'isRuslan/vim-es6'
 Plugin 'kchmck/vim-coffee-script'
+"Plugin 'chrisbra/csv.vim'
+Plugin 'ap/vim-css-color'
 
+if has('win32') || has('win64') || has('win32unix') || has('win95')
+  Plugin 'ervandew/supertab.git'
+else
+  Plugin 'ervandew/supertab.git'
+  "Plugin 'valloric/youcompleteme' # TODO fix config with snippets
+endif
 
 if version < 800
   Plugin 'vim-syntastic/syntastic.git'     " Display synax errors of many languages
 else
   Plugin 'w0rp/ale'
 endif
-"Plugin 'chrisbra/csv.vim'
 
 " ##############
 " ##  themes  ##
@@ -123,46 +126,9 @@ call vundle#end()
 filetype plugin indent on    " required
 
 
-" ############################
-" ##  Plugin Configuration  ##
-" ############################
-
-"colorscheme summerfruit256
-colorscheme gruvbox
-"let g:gruvbox_italic = 0
-
-set background=dark
-
-if version < 800
-  "set lazyredraw
-  "set nolazyredraw
-  "set nolazyredraw
-  "set ttyfast
-  "Syntax Checker
-  set statusline+=%#warningmsg#
-  set statusline+=%{SyntasticStatuslineFlag()}
-  set statusline+=%*
-
-  " Enable syntastic syntax checking
-  let g:syntastic_enable_signs=1
-  let g:syntastic_always_populate_loc_list = 1
-  let g:syntastic_auto_loc_list = 1
-  let g:syntastic_check_on_open = 0
-  let g:syntastic_check_on_wq = 0
-  let g:syntastic_javascript_checkers=['eslint']
-
-  "let g:syntastic_ruby_checkers = ['rubocop', 'mri' ]
-else
-  set nolazyredraw
-
-  let g:ale_lint_delay = 500
-  let g:ale_fix_on_save = 1
-  let g:ale_fixers = {
-        \ 'javascript': ['prettier', 'eslint'],
-        \ 'ruby': ['rubocop'],
-        \ }
-  let g:airline#extensions#ale#enabled = 1
-endif
+" #############################
+" ##  General Configuration  ##
+" #############################
 
 set number
 set ruler
@@ -247,6 +213,53 @@ let g:loaded_2html_plugin = 1
 " ############################
 " ##  Plugin Configuration  ##
 " ############################
+
+if version < 800
+  "set lazyredraw
+  "set nolazyredraw
+  "set nolazyredraw
+  "set ttyfast
+  "Syntax Checker
+  set statusline+=%#warningmsg#
+  set statusline+=%{SyntasticStatuslineFlag()}
+  set statusline+=%*
+
+  " Enable syntastic syntax checking
+  let g:syntastic_enable_signs=1
+  let g:syntastic_always_populate_loc_list = 1
+  let g:syntastic_auto_loc_list = 1
+  let g:syntastic_check_on_open = 0
+  let g:syntastic_check_on_wq = 0
+  let g:syntastic_javascript_checkers=['eslint']
+
+  "let g:syntastic_ruby_checkers = ['rubocop', 'mri' ]
+else
+  set nolazyredraw
+
+  let g:ale_lint_on_text_changed = 'never'
+  "let g:ale_lint_delay = 500
+  let g:ale_fix_on_save = 1
+  let g:ale_fixers = {
+        \ 'javascript': ['prettier', 'eslint'],
+        \ 'ruby':       ['rubocop'],
+        \ 'css':        ['csslint'],
+        \ 'go':         ['gofmt'],        
+        \ }
+  let g:airline#extensions#ale#enabled = 1
+endif
+
+
+"let g:ycm_key_list_select_completion=['<C-n>', '<Down>']
+"let g:ycm_key_list_previous_completion=['<C-p>', '<Up>']
+
+"let g:SuperTabDefaultCompletionType    = '<Tab>'
+"let g:SuperTabCrMapping                = 0
+
+"let g:UltiSnipsExpandTrigger="<Tab>"
+"let g:UltiSnipsJumpForwardTrigger="<Tab>"                                           
+"let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
+"
+let g:gruvbox_contrast_dark='high'
 
 " Tab completion
 set wildmode=list:longest,list:full
@@ -377,3 +390,12 @@ endif
 if filereadable(expand("$HOME/_vimrc.local"))
   source $HOME/_vimrc.local
 endif
+
+
+"colorscheme summerfruit256
+colorscheme gruvbox
+"let g:gruvbox_italic = 0
+
+set background=dark
+
+
