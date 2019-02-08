@@ -76,7 +76,7 @@ function prompt
 #($LIGHT_BLUE\$(date +%H:%M:%S)$LIGHT_GRAY) $LIGHT_GREEN\$(parse_repos)$LIGHT_GRAY "
 
 PS1="$LIGHT_GREEN\u$LIGHT_GRAY@$LIGHT_CYAN\h$LIGHT_GRAY($LIGHT_BLUE\$(date +%H:%M:%S)$LIGHT_GRAY) $PURPLE\w\$(detect_basename)
-  $LIGHT_RED\$(parse_rvm)$LIGHT_PURPLE$LIGHT_GREEN\$(parse_repos)$LIGHT_GRAY: "
+$LIGHT_RED\$(parse_rvm)$LIGHT_PURPLE$LIGHT_GREEN\$(parse_repos)$LIGHT_GRAY: "
   #PS1="$YELLOW\u$NO_COLOUR($LIGHT_CYAN\h$LIGHT_GREEN  \w$NO_COLOUR)
   #($LIGHT_GREEN\$(date +%H:%M:%S)$LIGHT_GRAY) $LIGHT_GREEN\$(parse_repos)$LIGHT_GRAY "
 

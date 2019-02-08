@@ -79,6 +79,8 @@ Plugin 'tpope/vim-fugitive.git'       " f.e. git blame integration
 Plugin 'scrooloose/nerdcommenter.git' " commenting functionality
 Plugin 'scrooloose/nerdtree.git'          " Directory Tree
 
+Plugin 'chrisbra/vim-diff-enhanced'
+
 
 " ########################
 " ##  language support  ##
@@ -86,7 +88,8 @@ Plugin 'scrooloose/nerdtree.git'          " Directory Tree
 Plugin 'fatih/vim-go.git'             " Go-Lang
 "Plugin 'othree/yajs.vim.git'          " Javascript
 Plugin 'stephpy/vim-yaml.git'
-"Plugin 'isRuslan/vim-es6'
+Plugin 'isRuslan/vim-es6'
+Plugin 'leafgarland/typescript-vim'
 Plugin 'kchmck/vim-coffee-script'
 "Plugin 'chrisbra/csv.vim'
 Plugin 'ap/vim-css-color'
@@ -150,6 +153,7 @@ set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
 set cursorline
 "set cursorcolumn
 
+"set lines=50 columns=100
 
 " GUI Settings
 ":set guioptions-=m  "remove menu bar
@@ -164,7 +168,7 @@ set backspace=indent,eol,start
 filetype plugin indent on
 
 
-" Use modeline overrides
+:" Use modeline overrides
 set modeline
 set modelines=10
 
@@ -177,8 +181,8 @@ else
   au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%85v.\+', -1)
 endif
 
-hi Normal ctermbg=none
-highlight NonText ctermbg=none
+"hi Normal ctermbg=none
+"highlight NonText ctermbg=none
 
 
 " Vertical split right and split below
@@ -234,11 +238,15 @@ if version < 800
 
   "let g:syntastic_ruby_checkers = ['rubocop', 'mri' ]
 else
-  set nolazyredraw
+  set lazyredraw
+  "set nolazyredraw
+  set ttyfast
 
-  let g:ale_lint_on_text_changed = 'never'
-  "let g:ale_lint_delay = 500
-  let g:ale_fix_on_save = 1
+  "let g:ale_lint_on_text_changed = 'never'
+  let g:ale_lint_delay = 1500
+  let g:ale_completion_enabled = 0
+  let g:ale_fix_on_save = 0
+
   let g:ale_fixers = {
         \ 'javascript': ['prettier', 'eslint'],
         \ 'ruby':       ['rubocop'],
@@ -246,6 +254,14 @@ else
         \ 'go':         ['gofmt'],        
         \ }
   let g:airline#extensions#ale#enabled = 1
+  "nnoremap <leader>q :echo QuickfixToggle()<cr>
+  "function! QuickfixToggle()
+    "if g:ale_fix_on_save
+      "let g:ale_fix_on_save = 0
+    "else
+      "let g:ale_fix_on_save = 1
+    "endif
+  "endfunction
 endif
 
 
@@ -364,6 +380,7 @@ map <leader>m :TlistToggle<CR>
 nmap <F5> :set background=dark<CR>
 nmap <F6> :set background=light<CR>
 nmap <F7> :hi Normal ctermbg=none<CR>:highlight NonText ctermbg=none<CR>
+nmap <F8> :hi Normal ctermbg=214<CR>:highlight NonText ctermbg=214<CR>
 
 "function ResetColorScheme()
   "let reset_color= g:colors_name
@@ -398,4 +415,6 @@ colorscheme gruvbox
 
 set background=dark
 
+
+nnoremap <leader>q :let g:ale_fix_on_save = 1<cr>
 

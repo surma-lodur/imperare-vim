@@ -25,10 +25,16 @@ snippet mcom
 	# ${4}
 	#
 
+snippet def
+	def ${1:}(${2})
+		${4}
+	end
+
 snippet cdef
 	def ${1:}(${2})
 		${4}
 	end # .$1
+
 snippet mdef
 	def ${1:}(${2})
 		${4}
@@ -38,6 +44,11 @@ snippet cself
 	class << self
 		${2}
 	end # class << self
+
+snippet mod
+	module ${1:}
+		${2}
+	end
 
 snippet cmod
 	module ${1:}
@@ -68,6 +79,11 @@ snippet define
 	def ${1:}${2}
 		${4}
 	end # ${3}$1
+
+snippet do
+	do
+	  ${1}
+	end
 
 snippet com
 	##
