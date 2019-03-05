@@ -44,3 +44,17 @@ Style/StringLiterals:
   
 Naming/MemoizedInstanceVariableName:
   EnforcedStyleForLeadingUnderscores: required
+
+
+Style/SpecialGlobalVars:
+  Description: 'Avoid Perl-style global variables.'
+  StyleGuide: '#no-cryptic-perlisms'
+  Enabled: true
+  VersionAdded: '0.13'
+  VersionChanged: '0.36'
+  SafeAutoCorrect: false
+  EnforcedStyle: use_perl_names
+  SupportedStyles:
+    - use_perl_names
+    - use_english_names
+

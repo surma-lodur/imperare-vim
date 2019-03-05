@@ -417,4 +417,5 @@ set background=dark
 
 
 nnoremap <leader>q :let g:ale_fix_on_save = 1<cr>
+nnoremap <leader>a :let g:ale_fix_on_save = 0<cr>
 
