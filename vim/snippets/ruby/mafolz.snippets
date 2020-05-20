@@ -42,8 +42,8 @@ snippet mdef
 
 snippet cself
 	class << self
-		${2}
-	end # class << self
+		${1}
+	end 
 
 snippet mod
 	module ${1:}
@@ -58,22 +58,22 @@ snippet cmod
 snippet class
 	class ${1:}
 		${2}
-	end # $1
+	end 
 
 snippet map
 	map do |${1}|
 		$1
-	end # map
+	end 
 
 snippet context
 	context '${1:}' do
 	${2:}
-	end # context '$1'
+	end 
 
 snippet describe
 	describe '${1:}' do
 	${2:}
-	end # describe		  '$1'
+	end 
 
 snippet define
 	def ${1:}${2}

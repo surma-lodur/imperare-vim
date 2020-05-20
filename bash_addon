@@ -1,6 +1,14 @@
 alias st='spring stop'
 alias be='bundle exec'
 alias gitlg="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+alias gfp="git fetch -p"
+alias gc="git commit"
+alias gp="git pull"
+alias gfhs="git flow hotfix start"
+alias gfhf="git flow hotfix finish"
+alias gps="git push"
+
+alias cleanup-docker='docker image prune -a --filter "until=24h" && docker container prune --filter "until=24h" '
 export GIT_MERGE_AUTOEDIT=no
 export CF_DIAL_TIMEOUT=10
 export VM=true
@@ -41,10 +49,21 @@ parse_state(){
     sed 's/\// /g') | cut -f1) ] && echo '' || echo '*'
 }
 
-parse_rvm(){
-  if [ -n ${GEM_HOME##*/} ] ; then
-   echo "<${GEM_HOME##*/}>"
- fi
+__rbenv_ps1 ()
+{
+  rbenv_ruby_version=`rbenv version | sed -e 's/ .*//'`
+  printf $rbenv_ruby_version
+}
+
+
+
+
+ruby_version_name() {
+  #if  then
+    echo "<$(__rbenv_ps1)>"
+ # else
+  #  echo "<${GEM_HOME##*/}>"
+  #fi
 }
 
 detect_basename(){
@@ -72,11 +91,11 @@ function prompt
   local BLACK="\[\033[0;30m\]"
   local WHITE="\[\033[1;37m\]"
 
-#  PS1="$LIGHT_GREEN\u$LIGHT_GRAY@$LIGHT_CYAN\h$LIGHT_RED<\$(parse_rvm)>$LIGHT_GRAY:$PURPLE\w $LIGHT_GRAY
-#($LIGHT_BLUE\$(date +%H:%M:%S)$LIGHT_GRAY) $LIGHT_GREEN\$(parse_repos)$LIGHT_GRAY "
+  #  PS1="$LIGHT_GREEN\u$LIGHT_GRAY@$LIGHT_CYAN\h$LIGHT_RED<\$(parse_rvm)>$LIGHT_GRAY:$PURPLE\w $LIGHT_GRAY
+  #($LIGHT_BLUE\$(date +%H:%M:%S)$LIGHT_GRAY) $LIGHT_GREEN\$(parse_repos)$LIGHT_GRAY "
 
-PS1="$LIGHT_GREEN\u$LIGHT_GRAY@$LIGHT_CYAN\h$LIGHT_GRAY($LIGHT_BLUE\$(date +%H:%M:%S)$LIGHT_GRAY) $PURPLE\w\$(detect_basename)
-$LIGHT_RED\$(parse_rvm)$LIGHT_PURPLE$LIGHT_GREEN\$(parse_repos)$LIGHT_GRAY: "
+  PS1="$LIGHT_GREEN\u$LIGHT_GRAY@$LIGHT_CYAN\h$LIGHT_GRAY($LIGHT_BLUE\$(date +%H:%M:%S)$LIGHT_GRAY) $PURPLE\w\$(detect_basename)
+  $LIGHT_RED\$(ruby_version_name)$LIGHT_PURPLE$LIGHT_GREEN\$(parse_repos)$LIGHT_GRAY: "
   #PS1="$YELLOW\u$NO_COLOUR($LIGHT_CYAN\h$LIGHT_GREEN  \w$NO_COLOUR)
   #($LIGHT_GREEN\$(date +%H:%M:%S)$LIGHT_GRAY) $LIGHT_GREEN\$(parse_repos)$LIGHT_GRAY "
 

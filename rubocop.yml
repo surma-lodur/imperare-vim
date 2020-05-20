@@ -58,3 +58,6 @@ Style/SpecialGlobalVars:
     - use_perl_names
     - use_english_names
 
+Style/CommentedKeyword:
+  Description: 'Do not place comments on the same line as certain keywords.'
+  Enabled: false

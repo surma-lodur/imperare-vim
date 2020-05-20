@@ -2,6 +2,11 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 " ##################################
 " ##  Platform specific settings  ##
 " ##################################
@@ -10,128 +15,148 @@ if has('win32') || has('win64') || has('win32unix') || has('win95')
   let $PATH.= ';' . $HOME . '/_vim/bin'
   set runtimepath=$HOME/_vim,$VIM/vimfiles,$VIMRUNTIME,$VIM/vimfiles/after,$HOME/_vim/after
 
-  " Textile config
-  let g:TextileOS="Windows"
-  let g:TextileBrowser="edge.exe"
-
   set guifont=DejaVu_Sans_Mono_for_Powerline:h9:cANSI
   set backupdir=$HOME/_vim/backup
   set directory=$HOME/_vim/backup
-  " vundle support
-  set rtp+=$HOME/_vim/bundle/Vundle.vim
-
-  let path='~/_vim/bundle'
 
   " ack grep
   let g:ackprg=$HOME . "/_vim/bin/ag.exe --nogroup --nocolor --column"
 
-  call vundle#begin(path)
+  call plug#begin('~/_vim/plugged')
 
   "helptags ~/_vim/doc/*
-  let g:vimrubocop_config = '~/_vim/rubocop.yml'
+  "let g:vimrubocop_config = '~/_vim/rubocop.yml'
 
 else
   set shell=/bin/sh
-
-  " Textile config
-  let g:TextileOS="Linux"
-  let g:TextileBrowser="chromium-browser"
 
   " Directories for swp files
   set backupdir=~/.vim/backup
   set directory=~/.vim/backup
 
-  " vundle support
-  set rtp+=~/.vim/bundle/Vundle.vim
-
-  call vundle#begin()
+  call plug#begin('~/.vim/plugged')
 
   if has("mac") || has("gui_macvim")
-    set guifont=Liberation\ Mono\ for\ Powerline:h14
-    let g:ackprg="grep -RHi"
+    "set guifont=Liberation\ Mono\ for\ Powerline:h14
+    set guifont=Hack\ Nerd\ Font\ Mono:h14
+    let g:ackprg="ag --nocolor --nogroup --column"
+    "helptags ~/.vim/doc/*
+    "let g:vimrubocop_config = '~/.vim/rubocop.yml'
+
+    if exists("+relativenumber")
+      set norelativenumber
+    endif
+
+    set foldlevel=0
+    set foldmethod=manual
 
   else
     set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 9
     " ack grep
     let g:ackprg="ag --nocolor --nogroup --column"
     "helptags ~/.vim/doc/*
-    let g:vimrubocop_config = '~/.vim/rubocop.yml'
+    "let g:vimrubocop_config = '~/.vim/rubocop.yml'
+
   end
 endif
+
 
 " ###############
 " ##  Plugins  ##
 " ###############
 
-Plugin 'VundleVim/Vundle.vim'        " Plugin Manager
-Plugin 'ctrlpvim/ctrlp.vim.git'      " File search by file name
-Plugin 'mileszs/ack.vim.git'         " Full text search via ack-grep or ag
-Plugin 'tomtom/tlib_vim.git'         " Needed for snipmate
-Plugin 'MarcWeber/vim-addon-mw-utils.git'
-Plugin 'garbas/vim-snipmate.git'      "
-" Plugin 'honza/vim-snippets'         " Enable this to get some predefined Snippets for different languages
-Plugin 'taglist.vim'                  " provides  a method tree per file
-Plugin 'bling/vim-airline.git'        " Colourfull status line
+Plug 'ctrlpvim/ctrlp.vim',      &diff ? {'on': []} : {} " File search by file name
+Plug 'mileszs/ack.vim',         &diff ? {'on': []} : {} " Full text search via ack-grep or ag
+Plug 'tomtom/tlib_vim'         " Needed for snipmate
+Plug 'MarcWeber/vim-addon-mw-utils'
+"Plug 'taglist.vim'             " provides  a method tree per file
+Plug 'bling/vim-airline'        " Colourfull status line
 
-Plugin 'firat/vim-bufexplorer.git'    " Explore open files
-Plugin 'tpope/vim-git.git'            " Git Support
-Plugin 'tpope/vim-fugitive.git'       " f.e. git blame integration
-Plugin 'scrooloose/nerdcommenter.git' " commenting functionality
-Plugin 'scrooloose/nerdtree.git'          " Directory Tree
+Plug 'jlanzarotta/bufexplorer', &diff ? {'on': []} : {} " Explore open files
+Plug 'tpope/vim-git',           &diff ? {'on': []} : {} " Git Support
+Plug 'tpope/vim-fugitive',      &diff ? {'on': []} : {} " f.e. git blame integration
+Plug 'tpope/vim-commentary'
+Plug 'scrooloose/nerdtree',        &diff ? {'on': []} : {}     " Directory Tree
 
-Plugin 'chrisbra/vim-diff-enhanced'
-
+Plug 'chrisbra/vim-diff-enhanced', &diff ? {} : {'on': []}
+"Plugin 'blueyed/vim-diminactive'
+"Plugin 'powerman/vim-plugin-AnsiEsc.git'
 
 " ########################
 " ##  language support  ##
 " ########################
-Plugin 'fatih/vim-go.git'             " Go-Lang
-"Plugin 'othree/yajs.vim.git'          " Javascript
-Plugin 'stephpy/vim-yaml.git'
-Plugin 'isRuslan/vim-es6'
-Plugin 'leafgarland/typescript-vim'
-Plugin 'kchmck/vim-coffee-script'
+Plug 'fatih/vim-go',               {'for': 'go'}            " Go-Lang
+Plug 'vim-ruby/vim-ruby',          {'for': 'ruby'}
+Plug 'rust-lang/rust.vim',         {'for': 'rust'}
+"Plugin 'kchmck/vim-coffee-script', {for: 'coffee'}
+Plug 'elixir-editors/vim-elixir',  {'for': 'elixir'}
+Plug 'pangloss/vim-javascript',    {'for': ['js', 'javascript']}
+Plug 'maxmellon/vim-jsx-pretty',   {'for': ['jsx', 'javascript', 'js']}
+Plug 'stephpy/vim-yaml',           {'for': 'yaml'}
+Plug 'leafgarland/typescript-vim', {'for': ['js', 'javascript', 'ts']}
 "Plugin 'chrisbra/csv.vim'
-Plugin 'ap/vim-css-color'
+"Plugin 'ap/vim-css-color'
 
 if has('win32') || has('win64') || has('win32unix') || has('win95')
-  Plugin 'ervandew/supertab.git'
+  Plug 'ervandew/supertab.git'
+  Plug 'garbas/vim-snipmate.git'      
+  "let g:SuperTabDefaultCompletionType    = '<Tab>'
+  "let g:SuperTabCrMapping                = 0
+
 else
-  Plugin 'ervandew/supertab.git'
-  "Plugin 'valloric/youcompleteme' # TODO fix config with snippets
+  Plug 'ervandew/supertab'
+  Plug 'garbas/vim-snipmate'      
+  "Plugin 'valloric/youcompleteme' " TODO fix config with snippets
+  "let g:ycm_key_list_select_completion=['<C-n>', '<Down>']
+  "let g:ycm_key_list_previous_completion=['<C-p>', '<Up>']
+
+  "imap <Tab> <C-P>
+  " cd ~/.vim/bundle/YouCompleteMe
+  " python3 install.py   --clang-completer  --go-completer 
+endif
+
+if executable('fd')
+  let g:ctrlp_user_command = 'fd -c never "" %s'
+  let g:ctrlp_use_caching = 0
 endif
 
 if version < 800
-  Plugin 'vim-syntastic/syntastic.git'     " Display synax errors of many languages
+  Plug 'vim-syntastic/syntastic.git'     " Display synax errors of many languages
 else
-  Plugin 'w0rp/ale'
+  Plug 'w0rp/ale'
 endif
+
+
 
 " ##############
 " ##  themes  ##
 " ##############
 
 " Black
-Plugin 'sickill/vim-monokai.git'
+"Plugin 'sickill/vim-monokai.git'
 "Plugin 'yantze/pt_black.git'
 
 " Invertable color theme
 "Plugin 'noahfrederick/vim-hemisu.git'
 "Plugin 'rakr/vim-two-firewatch'
 "Plugin 'mkarmona/materialbox.git'
-Plugin 'morhetz/gruvbox'
+Plug 'morhetz/gruvbox'
 
 " light theme
 "Plugin 'vim-scripts/summerfruit256.vim.git'
 "Plugin 'vim-scripts/proton.git'
 
-call vundle#end()
-filetype plugin indent on    " required
+call plug#end()
 
+filetype plugin indent on    " required
+set omnifunc=syntaxcomplete#Complete
 
 " #############################
 " ##  General Configuration  ##
 " #############################
+nmap <D-v> "+gP
+imap <D-v> <ESC><D-v>i
+vmap <D-c> "+y 
 
 set number
 set ruler
@@ -149,17 +174,14 @@ set expandtab
 "set list listchars=tab:\ \ ,trail:·
 "set listchars=tab:>·,trail:~,extends:>,precedes:<
 set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
-" Set cursor highlighting
-set cursorline
-"set cursorcolumn
-
 "set lines=50 columns=100
+set diffopt=filler,context:0
 
 " GUI Settings
 ":set guioptions-=m  "remove menu bar
-:set guioptions-=T  "remove toolbar
-:set guioptions-=r  "remove right-hand scroll bar
-:set lines=55 columns=150
+":set guioptions-=T  "remove toolbar
+":set guioptions-=r  "remove right-hand scroll bar
+":set lines=55 columns=150
 
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
@@ -172,17 +194,19 @@ filetype plugin indent on
 set modeline
 set modelines=10
 
-" set line limit bar
-" VIM 7.3+ has support for highlighting a specified column.
-if exists('+colorcolumn')
-  set colorcolumn=140
-else
-   "Emulate
-  au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%85v.\+', -1)
-endif
+  " Set cursor highlighting
+  "set cursorline
+  "set cursorcolumn
 
-"hi Normal ctermbg=none
-"highlight NonText ctermbg=none
+  " set line limit bar
+  " VIM 7.3+ has support for highlighting a specified column.
+  if exists('+colorcolumn')
+    "set colorcolumn=140
+  else
+    "Emulate
+    "au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%85v.\+', -1)
+  endif
+
 
 
 " Vertical split right and split below
@@ -210,19 +234,19 @@ au BufNewFile,BufRead *.ino set ft=cpp
 " #######################
 
 " Manage Script packages vba
-let g:loaded_vimballPlugin = 1
+" let g:loaded_vimballPlugin = 1
 " Convert current view to HTML
-let g:loaded_2html_plugin = 1
+" let g:loaded_2html_plugin = 1
 
 " ############################
 " ##  Plugin Configuration  ##
 " ############################
 
 if version < 800
-  "set lazyredraw
+  set lazyredraw
   "set nolazyredraw
   "set nolazyredraw
-  "set ttyfast
+  set ttyfast
   "Syntax Checker
   set statusline+=%#warningmsg#
   set statusline+=%{SyntasticStatuslineFlag()}
@@ -242,40 +266,36 @@ else
   "set nolazyredraw
   set ttyfast
 
-  "let g:ale_lint_on_text_changed = 'never'
-  let g:ale_lint_delay = 1500
-  let g:ale_completion_enabled = 0
+  let g:ale_lint_on_text_changed = 'never'
+  let g:ale_lint_on_insert_leave = 1
+  let g:ale_lint_on_enter = 0
+  let g:ale_lint_delay = 500
+  let g:ale_completion_enabled = 1
   let g:ale_fix_on_save = 0
+  let g:ale_cache_executable_check_failures=1
+  let g:ale_linters = {
+        \ 'elixir':     ['dialyxir'],
+        \ }
+
 
   let g:ale_fixers = {
-        \ 'javascript': ['prettier', 'eslint'],
+        \ 'javascript': ['eslint', 'prettier'], 
         \ 'ruby':       ['rubocop'],
         \ 'css':        ['csslint'],
         \ 'go':         ['gofmt'],        
+        \ 'elixir':     ['mix_format'],
         \ }
+  " , 'eslint'],
   let g:airline#extensions#ale#enabled = 1
-  "nnoremap <leader>q :echo QuickfixToggle()<cr>
-  "function! QuickfixToggle()
-    "if g:ale_fix_on_save
-      "let g:ale_fix_on_save = 0
-    "else
-      "let g:ale_fix_on_save = 1
-    "endif
-  "endfunction
 endif
 
-
-"let g:ycm_key_list_select_completion=['<C-n>', '<Down>']
-"let g:ycm_key_list_previous_completion=['<C-p>', '<Up>']
-
-"let g:SuperTabDefaultCompletionType    = '<Tab>'
-"let g:SuperTabCrMapping                = 0
+"let g:diminactive_use_colorcolumn = 0
+"let g:diminactive_use_syntax = 1
 
 "let g:UltiSnipsExpandTrigger="<Tab>"
 "let g:UltiSnipsJumpForwardTrigger="<Tab>"                                           
 "let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 "
-let g:gruvbox_contrast_dark='high'
 
 " Tab completion
 set wildmode=list:longest,list:full
@@ -312,11 +332,10 @@ let g:netrw_liststyle = 3
 let g:netrw_browse_split = 4
 let g:netrw_altv = 1
 let g:netrw_winsize = 10
-"augroup ProjectDrawer
-  "autocmd!
-  "autocmd VimEnter * :Vexplore
-"augroup END
 
+" ruby
+let ruby_no_expensive=1
+" set re=1
 " ####################
 " ##  key mappings  ##
 " ####################
@@ -367,7 +386,7 @@ map <F2> :Vexplore<CR>
 map <Leader>n :NERDTreeToggle<CR>
 
 " ctags tags file generation for the current directory
-map <F8> :!ctags -R .<CR>
+map <F8> :!ctags -R -n --fields=+i+K+S+l+m+a <CR>
 
 map <leader>b :BufExplorer<CR>
 map <F12> :BufExplorer<CR>
@@ -382,22 +401,17 @@ nmap <F6> :set background=light<CR>
 nmap <F7> :hi Normal ctermbg=none<CR>:highlight NonText ctermbg=none<CR>
 nmap <F8> :hi Normal ctermbg=214<CR>:highlight NonText ctermbg=214<CR>
 
-"function ResetColorScheme()
-  "let reset_color= g:colors_name
-  "hi Normal ctermbg=256
-  "highlight NonText ctermbg=256
-  "color default
-  "execute ":color ".reset_color
-"endfunction
-
 nmap <F8> :execute ":color ".g:colors_name <CR>
 
 " Golang
 au FileType go nmap <leader>r <Plug>(go-run)
 au FileType go nmap <leader>t <Plug>(go-test)
 au FileType go nmap <leader>c <Plug>(go-coverage)
+au FileType xml nnoremap <leader>x :%!xmllint --format -<CR>
+au FileType json nnoremap <leader>x :%!jq .<CR>
 
 map <F4> :%s/\s\+$//e
+
 
 " Include user's local vim config
 if filereadable(expand("~/.vimrc.local"))
@@ -409,13 +423,21 @@ if filereadable(expand("$HOME/_vimrc.local"))
 endif
 
 
-"colorscheme summerfruit256
-colorscheme gruvbox
-"let g:gruvbox_italic = 0
+let g:gruvbox_contrast_dark='high'
+let g:gruvbox_contrast_light='high'
+"let g:gruvbox_italic = 1
 
-set background=dark
+colorscheme gruvbox
+
+set background=light
 
 
 nnoremap <leader>q :let g:ale_fix_on_save = 1<cr>
 nnoremap <leader>a :let g:ale_fix_on_save = 0<cr>
 
+let g:NERDTreeNodeDelimiter = "\u00a0"
+
+" :let $RBENV_VERSION="2.3.8"
+set tabstop=2 shiftwidth=2 expandtab
+set mmp=5000
+let g:go_version_warning = 0
