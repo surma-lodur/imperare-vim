@@ -60,12 +60,11 @@ else
   end
 endif
 
-
 " ###############
 " ##  Plugins  ##
 " ###############
 
-Plug 'ctrlpvim/ctrlp.vim',      &diff ? {'on': []} : {} " File search by file name
+Plug 'ctrlpvim/ctrlp.vim',      &diff ? {'on': []} : {'on': 'CtrlP'} " File search by file name
 Plug 'mileszs/ack.vim',         &diff ? {'on': []} : {} " Full text search via ack-grep or ag
 Plug 'tomtom/tlib_vim'         " Needed for snipmate
 Plug 'MarcWeber/vim-addon-mw-utils'
@@ -74,9 +73,9 @@ Plug 'bling/vim-airline'        " Colourfull status line
 
 Plug 'jlanzarotta/bufexplorer', &diff ? {'on': []} : {} " Explore open files
 Plug 'tpope/vim-git',           &diff ? {'on': []} : {} " Git Support
-Plug 'tpope/vim-fugitive',      &diff ? {'on': []} : {} " f.e. git blame integration
+Plug 'tpope/vim-fugitive',      &diff ? {'on': []} : {'on': 'Gblame'} " f.e. git blame integration
 Plug 'tpope/vim-commentary'
-Plug 'scrooloose/nerdtree',        &diff ? {'on': []} : {}     " Directory Tree
+Plug 'scrooloose/nerdtree',        &diff ? {'on': []} : {'on': 'NERDTreeToggle'}     " Directory Tree
 
 Plug 'chrisbra/vim-diff-enhanced', &diff ? {} : {'on': []}
 "Plugin 'blueyed/vim-diminactive'
@@ -104,15 +103,22 @@ if has('win32') || has('win64') || has('win32unix') || has('win95')
   "let g:SuperTabCrMapping                = 0
 
 else
-  Plug 'ervandew/supertab'
   Plug 'garbas/vim-snipmate'      
-  "Plugin 'valloric/youcompleteme' " TODO fix config with snippets
+  if has('nvim')
+    let ruby_version = system('ruby -v')
+    let new_ruby = matchstr(ruby_version, 'ruby\s[2-9]\.[2-9]\.')
+    if  empty(new_ruby)
+      Plug 'ervandew/supertab'
+    else
+      Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    end
+  else
+    Plug 'ervandew/supertab'
+  endif
+  let g:deoplete#enable_at_startup = 1
+  "Plug 'ycm-core/YouCompleteMe', &diff ? {'on': []} : {'do': 'python3 install.py --all'} 
   "let g:ycm_key_list_select_completion=['<C-n>', '<Down>']
   "let g:ycm_key_list_previous_completion=['<C-p>', '<Up>']
-
-  "imap <Tab> <C-P>
-  " cd ~/.vim/bundle/YouCompleteMe
-  " python3 install.py   --clang-completer  --go-completer 
 endif
 
 if executable('fd')
@@ -126,7 +132,9 @@ else
   Plug 'w0rp/ale'
 endif
 
-
+if has("patch-8.1.0360")
+    "set diffopt+=internal,algorithm:patience
+endif
 
 " ##############
 " ##  themes  ##
@@ -284,6 +292,8 @@ else
         \ 'css':        ['csslint'],
         \ 'go':         ['gofmt'],        
         \ 'elixir':     ['mix_format'],
+        \ 'sh':         ['shfmt'],
+        \ 'bash':       ['shfmt'],
         \ }
   " , 'eslint'],
   let g:airline#extensions#ale#enabled = 1
