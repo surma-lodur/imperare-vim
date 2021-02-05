@@ -28,7 +28,7 @@ if has('win32') || has('win64') || has('win32unix') || has('win95')
   "let g:vimrubocop_config = '~/_vim/rubocop.yml'
 
 else
-  set shell=/bin/sh
+  set shell=$SHELL
 
   " Directories for swp files
   set backupdir=~/.vim/backup
@@ -64,22 +64,69 @@ endif
 " ##  Plugins  ##
 " ###############
 
+if has('win32') || has('win64') || has('win32unix') || has('win95')
+  Plug 'ervandew/supertab.git'
+  Plug 'garbas/vim-snipmate.git'
+
+else
+  if has('nvim')
+    let ruby_version = system('ruby -v')
+    let new_ruby = matchstr(ruby_version, 'ruby\s[2-9]\.[2-9]\.')
+
+    Plug 'metalelf0/supertab',   empty(new_ruby) ? {} : {'on': []}
+    Plug 'garbas/vim-snipmate', empty(new_ruby) ? {} : {'on': []}
+    Plug 'neoclide/coc.nvim',   empty(new_ruby) ? {'on': [], 'branch': 'release'} : {'branch': 'release'}
+
+    if empty(new_ruby)
+    else
+      " Use tab for trigger completion with characters ahead and navigate.
+      " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+      " other plugin before putting this into your config.
+      inoremap <silent><expr> <TAB>
+            \ pumvisible() ? "\<C-n>" :
+            \ <SID>check_back_space() ? "\<TAB>" :
+            \ coc#refresh()
+      inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+      function! s:check_back_space() abort
+        let col = col('.') - 1
+        return !col || getline('.')[col - 1]  =~# '\s'
+      endfunction
+    end
+  else
+    Plug 'garbas/vim-snipmate'
+    Plug 'metalelf0/supertab'
+  endif
+  let g:deoplete#enable_at_startup = 1
+endif
+
+if has('nvim')
+  Plug 'antoinemadec/FixCursorHold.nvim'
+end
+
 Plug 'ctrlpvim/ctrlp.vim',      &diff ? {'on': []} : {'on': 'CtrlP'} " File search by file name
 Plug 'mileszs/ack.vim',         &diff ? {'on': []} : {} " Full text search via ack-grep or ag
 Plug 'tomtom/tlib_vim'         " Needed for snipmate
 Plug 'MarcWeber/vim-addon-mw-utils'
-"Plug 'taglist.vim'             " provides  a method tree per file
+Plug 'vim-scripts/taglist.vim'  " provides  a method tree per file
 Plug 'bling/vim-airline'        " Colourfull status line
+Plug 'w0rp/ale'
 
 Plug 'jlanzarotta/bufexplorer', &diff ? {'on': []} : {} " Explore open files
 Plug 'tpope/vim-git',           &diff ? {'on': []} : {} " Git Support
 Plug 'tpope/vim-fugitive',      &diff ? {'on': []} : {'on': 'Gblame'} " f.e. git blame integration
 Plug 'tpope/vim-commentary'
-Plug 'scrooloose/nerdtree',        &diff ? {'on': []} : {'on': 'NERDTreeToggle'}     " Directory Tree
+Plug 'preservim/nerdtree',     &diff ? {'on': []} : {'on': 'NERDTreeToggle'}     " Directory Tree
+Plug 'lambdalisue/fern.vim',    &diff ? {'on': []} : {'on': 'Fern'}     " Directory Tree
+Plug 'lambdalisue/fern-renderer-devicons.vim',    &diff ? {'on': []} : {'on': 'Fern'}     " Directory Tree
+
+Plug 'ryanoasis/vim-devicons',  &diff ? {'on': []} : {} " Directory Tree
+Plug 'lambdalisue/glyph-palette.vim',  &diff ? {'on': []} : {} " Directory Tree
+
 
 Plug 'chrisbra/vim-diff-enhanced', &diff ? {} : {'on': []}
-"Plugin 'blueyed/vim-diminactive'
 "Plugin 'powerman/vim-plugin-AnsiEsc.git'
+
 
 " ########################
 " ##  language support  ##
@@ -96,41 +143,12 @@ Plug 'leafgarland/typescript-vim', {'for': ['js', 'javascript', 'ts']}
 "Plugin 'chrisbra/csv.vim'
 "Plugin 'ap/vim-css-color'
 
-if has('win32') || has('win64') || has('win32unix') || has('win95')
-  Plug 'ervandew/supertab.git'
-  Plug 'garbas/vim-snipmate.git'      
-  "let g:SuperTabDefaultCompletionType    = '<Tab>'
-  "let g:SuperTabCrMapping                = 0
-
-else
-  Plug 'garbas/vim-snipmate'      
-  if has('nvim')
-    let ruby_version = system('ruby -v')
-    let new_ruby = matchstr(ruby_version, 'ruby\s[2-9]\.[2-9]\.')
-    if  empty(new_ruby)
-      Plug 'ervandew/supertab'
-    else
-      Plug 'neoclide/coc.nvim', {'branch': 'release'}
-    end
-  else
-    Plug 'ervandew/supertab'
-  endif
-  let g:deoplete#enable_at_startup = 1
-  "Plug 'ycm-core/YouCompleteMe', &diff ? {'on': []} : {'do': 'python3 install.py --all'} 
-  "let g:ycm_key_list_select_completion=['<C-n>', '<Down>']
-  "let g:ycm_key_list_previous_completion=['<C-p>', '<Up>']
-endif
 
 if executable('fd')
   let g:ctrlp_user_command = 'fd -c never "" %s'
   let g:ctrlp_use_caching = 0
 endif
 
-if version < 800
-  Plug 'vim-syntastic/syntastic.git'     " Display synax errors of many languages
-else
-  Plug 'w0rp/ale'
-endif
 
 if has("patch-8.1.0360")
     "set diffopt+=internal,algorithm:patience
@@ -157,14 +175,14 @@ Plug 'morhetz/gruvbox'
 call plug#end()
 
 filetype plugin indent on    " required
-set omnifunc=syntaxcomplete#Complete
+"set omnifunc=syntaxcomplete#Complete
 
 " #############################
 " ##  General Configuration  ##
 " #############################
 nmap <D-v> "+gP
 imap <D-v> <ESC><D-v>i
-vmap <D-c> "+y 
+vmap <D-c> "+y
 
 set number
 set ruler
@@ -237,14 +255,6 @@ au BufNewFile,BufRead *.{json,node} set ft=javascript
 " arduino
 au BufNewFile,BufRead *.ino set ft=cpp
 
-" #######################
-" ##  Disable Plugins  ##
-" #######################
-
-" Manage Script packages vba
-" let g:loaded_vimballPlugin = 1
-" Convert current view to HTML
-" let g:loaded_2html_plugin = 1
 
 " ############################
 " ##  Plugin Configuration  ##
@@ -281,31 +291,28 @@ else
   let g:ale_completion_enabled = 1
   let g:ale_fix_on_save = 0
   let g:ale_cache_executable_check_failures=1
+  let g:ale_sign_error = '❗'
+  let g:ale_sign_warning = '⚠️ '
   let g:ale_linters = {
         \ 'elixir':     ['dialyxir'],
         \ }
 
 
   let g:ale_fixers = {
-        \ 'javascript': ['eslint', 'prettier'], 
+        \ '*': ['remove_trailing_lines', 'trim_whitespace'],
+        \ 'javascript': ['eslint', 'prettier'],
         \ 'ruby':       ['rubocop'],
         \ 'css':        ['csslint'],
-        \ 'go':         ['gofmt'],        
+        \ 'go':         ['gofmt'],
         \ 'elixir':     ['mix_format'],
         \ 'sh':         ['shfmt'],
         \ 'bash':       ['shfmt'],
         \ }
   " , 'eslint'],
   let g:airline#extensions#ale#enabled = 1
+  let g:ale_ruby_rubocop_executable = 'bundle'
 endif
 
-"let g:diminactive_use_colorcolumn = 0
-"let g:diminactive_use_syntax = 1
-
-"let g:UltiSnipsExpandTrigger="<Tab>"
-"let g:UltiSnipsJumpForwardTrigger="<Tab>"                                           
-"let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
-"
 
 " Tab completion
 set wildmode=list:longest,list:full
@@ -322,10 +329,6 @@ let g:ctrlp_custom_ignore = {
 set laststatus=2
 let g:airline_powerline_fonts=1
 let g:airline_enable_fugitive=1
-
-" NERDTree - toggle
-" Open the current buffer in the NERDTree
-let NERDTreeIgnore=['\.rbc$', '\~$']
 
 " Buff Explorere
 let g:bufExplorerSortBy='mru'
@@ -390,7 +393,8 @@ map <C-K> <C-W><C-K>
 map <leader>x  "+y
 map <leader>v  "+gP
 
-map <F2> :Vexplore<CR>
+map <F2> :Fern . -drawer -stay<CR>
+"map <F2> :Vexplore<CR>
 "map <F2> :NERDTreeToggle<CR>
 "map <C-N> :NERDTreeFind<cr>
 map <Leader>n :NERDTreeToggle<CR>
@@ -398,12 +402,13 @@ map <Leader>n :NERDTreeToggle<CR>
 " ctags tags file generation for the current directory
 map <F8> :!ctags -R -n --fields=+i+K+S+l+m+a <CR>
 
-map <leader>b :BufExplorer<CR>
-map <F12> :BufExplorer<CR>
-
 " Displays the tag list, this is a list of used Methods/constants which are
 " currently open into vim
 map <leader>m :TlistToggle<CR>
+
+map <leader>b :BufExplorer<CR>
+map <F12> :BufExplorer<CR>
+
 
 " switch theme
 nmap <F5> :set background=dark<CR>
@@ -439,15 +444,29 @@ let g:gruvbox_contrast_light='high'
 
 colorscheme gruvbox
 
-set background=light
+set background=dark
 
+augroup my-glyph-palette
+  autocmd! *
+  autocmd FileType fern call glyph_palette#apply()
+  autocmd FileType nerdtree,startify call glyph_palette#apply()
+augroup END
+let g:NERDTreeNodeDelimiter = "\u00a0"
+let g:NERDTreeDirArrowExpandable = ''
+let g:NERDTreeDirArrowCollapsible = ''
+let g:DevIconsEnableFoldersOpenClose = 1
+
+let g:fern#renderer = "devicons"
+"function! s:init_fern() abort
+"    nmap <buffer> <left> <Plug>(fern-action-expand)
+"    nmap <buffer> <right> <Plug>(fern-action-collapse)
+"endfunction
 
 nnoremap <leader>q :let g:ale_fix_on_save = 1<cr>
 nnoremap <leader>a :let g:ale_fix_on_save = 0<cr>
 
-let g:NERDTreeNodeDelimiter = "\u00a0"
 
-" :let $RBENV_VERSION="2.3.8"
+" :let $RBENV_VERSION="2.6.6"
 set tabstop=2 shiftwidth=2 expandtab
 set mmp=5000
 let g:go_version_warning = 0
