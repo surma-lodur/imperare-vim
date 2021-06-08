@@ -1,4 +1,3 @@
-
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
@@ -7,6 +6,7 @@ if empty(glob('~/.vim/autoload/plug.vim'))
         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
+
 " ##################################
 " ##  Platform specific settings  ##
 " ##################################
@@ -25,7 +25,6 @@ if has('win32') || has('win64') || has('win32unix') || has('win95')
   call plug#begin('~/_vim/plugged')
 
   "helptags ~/_vim/doc/*
-  "let g:vimrubocop_config = '~/_vim/rubocop.yml'
 
 else
   set shell=$SHELL
@@ -40,8 +39,6 @@ else
     "set guifont=Liberation\ Mono\ for\ Powerline:h14
     set guifont=Hack\ Nerd\ Font\ Mono:h14
     let g:ackprg="ag --nocolor --nogroup --column"
-    "helptags ~/.vim/doc/*
-    "let g:vimrubocop_config = '~/.vim/rubocop.yml'
 
     if exists("+relativenumber")
       set norelativenumber
@@ -55,7 +52,6 @@ else
     " ack grep
     let g:ackprg="ag --nocolor --nogroup --column"
     "helptags ~/.vim/doc/*
-    "let g:vimrubocop_config = '~/.vim/rubocop.yml'
 
   end
 endif
@@ -64,39 +60,35 @@ endif
 " ##  Plugins  ##
 " ###############
 
+let g:snipMate = { 'snippet_version' : 0 }
 if has('win32') || has('win64') || has('win32unix') || has('win95')
   Plug 'ervandew/supertab.git'
   Plug 'garbas/vim-snipmate.git'
 
 else
-  if has('nvim')
-    let ruby_version = system('ruby -v')
-    let new_ruby = matchstr(ruby_version, 'ruby\s[2-9]\.[2-9]\.')
+  let ruby_version = system('ruby -v')
+  let new_ruby = matchstr(ruby_version, 'ruby\s[2-9]\.[2-9]\.')
 
-    Plug 'metalelf0/supertab',   empty(new_ruby) ? {} : {'on': []}
-    Plug 'garbas/vim-snipmate', empty(new_ruby) ? {} : {'on': []}
-    Plug 'neoclide/coc.nvim',   empty(new_ruby) ? {'on': [], 'branch': 'release'} : {'branch': 'release'}
+  Plug 'metalelf0/supertab',   empty(new_ruby) ? {} : {'on': []}
+  Plug 'garbas/vim-snipmate', empty(new_ruby) ? {} : {'on': []}
+  Plug 'neoclide/coc.nvim',   empty(new_ruby) ? {'on': [], 'branch': 'release'} : {'branch': 'release'}
 
-    if empty(new_ruby)
-    else
-      " Use tab for trigger completion with characters ahead and navigate.
-      " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-      " other plugin before putting this into your config.
-      inoremap <silent><expr> <TAB>
-            \ pumvisible() ? "\<C-n>" :
-            \ <SID>check_back_space() ? "\<TAB>" :
-            \ coc#refresh()
-      inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-      function! s:check_back_space() abort
-        let col = col('.') - 1
-        return !col || getline('.')[col - 1]  =~# '\s'
-      endfunction
-    end
+  if empty(new_ruby)
   else
-    Plug 'garbas/vim-snipmate'
-    Plug 'metalelf0/supertab'
-  endif
+    " Use tab for trigger completion with characters ahead and navigate.
+    " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+    " other plugin before putting this into your config.
+    inoremap <silent><expr> <TAB>
+          \ pumvisible() ? "\<C-n>" :
+          \ <SID>check_back_space() ? "\<TAB>" :
+          \ coc#refresh()
+    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+    function! s:check_back_space() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1]  =~# '\s'
+    endfunction
+  end
   let g:deoplete#enable_at_startup = 1
 endif
 
@@ -105,23 +97,20 @@ if has('nvim')
 end
 
 Plug 'ctrlpvim/ctrlp.vim',      &diff ? {'on': []} : {'on': 'CtrlP'} " File search by file name
-Plug 'mileszs/ack.vim',         &diff ? {'on': []} : {} " Full text search via ack-grep or ag
+Plug 'yegappan/grep',         &diff ? {'on': []} : {} " Full text search via ack-grep or ag
 Plug 'tomtom/tlib_vim'         " Needed for snipmate
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'vim-scripts/taglist.vim'  " provides  a method tree per file
 Plug 'bling/vim-airline'        " Colourfull status line
-Plug 'w0rp/ale'
+Plug 'w0rp/ale',                &diff ? {'on': []} : {}
 
 Plug 'jlanzarotta/bufexplorer', &diff ? {'on': []} : {} " Explore open files
 Plug 'tpope/vim-git',           &diff ? {'on': []} : {} " Git Support
 Plug 'tpope/vim-fugitive',      &diff ? {'on': []} : {'on': 'Gblame'} " f.e. git blame integration
 Plug 'tpope/vim-commentary'
-Plug 'preservim/nerdtree',     &diff ? {'on': []} : {'on': 'NERDTreeToggle'}     " Directory Tree
-Plug 'lambdalisue/fern.vim',    &diff ? {'on': []} : {'on': 'Fern'}     " Directory Tree
-Plug 'lambdalisue/fern-renderer-devicons.vim',    &diff ? {'on': []} : {'on': 'Fern'}     " Directory Tree
-
-Plug 'ryanoasis/vim-devicons',  &diff ? {'on': []} : {} " Directory Tree
-Plug 'lambdalisue/glyph-palette.vim',  &diff ? {'on': []} : {} " Directory Tree
+Plug 'preservim/nerdtree',                        &diff ? {'on': []} : {'on': 'NERDTreeToggle'}     " Directory Tree
+Plug 'ryanoasis/vim-devicons',                    &diff ? {'on': []} : {} " Directory Tree
+Plug 'lambdalisue/glyph-palette.vim',             &diff ? {'on': []} : {} " Directory Tree
 
 
 Plug 'chrisbra/vim-diff-enhanced', &diff ? {} : {'on': []}
@@ -134,14 +123,14 @@ Plug 'chrisbra/vim-diff-enhanced', &diff ? {} : {'on': []}
 Plug 'fatih/vim-go',               {'for': 'go'}            " Go-Lang
 Plug 'vim-ruby/vim-ruby',          {'for': 'ruby'}
 Plug 'rust-lang/rust.vim',         {'for': 'rust'}
-"Plugin 'kchmck/vim-coffee-script', {for: 'coffee'}
 Plug 'elixir-editors/vim-elixir',  {'for': 'elixir'}
 Plug 'pangloss/vim-javascript',    {'for': ['js', 'javascript']}
 Plug 'maxmellon/vim-jsx-pretty',   {'for': ['jsx', 'javascript', 'js']}
 Plug 'stephpy/vim-yaml',           {'for': 'yaml'}
 Plug 'leafgarland/typescript-vim', {'for': ['js', 'javascript', 'ts']}
+Plug 'ap/vim-css-color',           {'for': ['html', 'haml', 'css']}
+"Plugin 'kchmck/vim-coffee-script', {for: 'coffee'}
 "Plugin 'chrisbra/csv.vim'
-"Plugin 'ap/vim-css-color'
 
 
 if executable('fd')
@@ -149,9 +138,8 @@ if executable('fd')
   let g:ctrlp_use_caching = 0
 endif
 
-
-if has("patch-8.1.0360")
-    "set diffopt+=internal,algorithm:patience
+if &diff
+   let &diffexpr='EnhancedDiff#Diff("git diff", "--diff-algorithm=patience")'
 endif
 
 " ##############
@@ -175,7 +163,6 @@ Plug 'morhetz/gruvbox'
 call plug#end()
 
 filetype plugin indent on    " required
-"set omnifunc=syntaxcomplete#Complete
 
 " #############################
 " ##  General Configuration  ##
@@ -197,10 +184,7 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 set expandtab
-"set list listchars=tab:\ \ ,trail:·
-"set listchars=tab:>·,trail:~,extends:>,precedes:<
 set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
-"set lines=50 columns=100
 set diffopt=filler,context:0
 
 " GUI Settings
@@ -220,18 +204,18 @@ filetype plugin indent on
 set modeline
 set modelines=10
 
-  " Set cursor highlighting
-  "set cursorline
-  "set cursorcolumn
+" Set cursor highlighting
+set cursorline
+"set cursorcolumn
 
-  " set line limit bar
-  " VIM 7.3+ has support for highlighting a specified column.
-  if exists('+colorcolumn')
-    "set colorcolumn=140
-  else
-    "Emulate
-    "au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%85v.\+', -1)
-  endif
+" set line limit bar
+" VIM 7.3+ has support for highlighting a specified column.
+if exists('+colorcolumn')
+  "set colorcolumn=140
+else
+  "Emulate
+  "au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%85v.\+', -1)
+endif
 
 
 
@@ -262,26 +246,14 @@ au BufNewFile,BufRead *.ino set ft=cpp
 
 if version < 800
   set lazyredraw
-  "set nolazyredraw
-  "set nolazyredraw
   set ttyfast
   "Syntax Checker
   set statusline+=%#warningmsg#
   set statusline+=%{SyntasticStatuslineFlag()}
   set statusline+=%*
 
-  " Enable syntastic syntax checking
-  let g:syntastic_enable_signs=1
-  let g:syntastic_always_populate_loc_list = 1
-  let g:syntastic_auto_loc_list = 1
-  let g:syntastic_check_on_open = 0
-  let g:syntastic_check_on_wq = 0
-  let g:syntastic_javascript_checkers=['eslint']
-
-  "let g:syntastic_ruby_checkers = ['rubocop', 'mri' ]
 else
   set lazyredraw
-  "set nolazyredraw
   set ttyfast
 
   let g:ale_lint_on_text_changed = 'never'
@@ -289,7 +261,7 @@ else
   let g:ale_lint_on_enter = 0
   let g:ale_lint_delay = 500
   let g:ale_completion_enabled = 1
-  let g:ale_fix_on_save = 0
+  let g:ale_fix_on_save = 1
   let g:ale_cache_executable_check_failures=1
   let g:ale_sign_error = '❗'
   let g:ale_sign_warning = '⚠️ '
@@ -314,11 +286,10 @@ else
 endif
 
 
+" CtrlP config
 " Tab completion
 set wildmode=list:longest,list:full
 set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/plugins/*,temp_gems/*,tmp/*,public/*,.bundler/*
-
-" CtrlP config
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.orig,*.org,*.jpg,*.png,*.gif,*.svg,*.swf,*.mp4*,*.flv
 let g:ctrlp_custom_ignore = {
       \'dir':  '\v[\/]((\.(git|hg|svn))|public|tmp|temp|log|logs)$',
@@ -346,9 +317,6 @@ let g:netrw_browse_split = 4
 let g:netrw_altv = 1
 let g:netrw_winsize = 10
 
-" ruby
-let ruby_no_expensive=1
-" set re=1
 " ####################
 " ##  key mappings  ##
 " ####################
@@ -418,10 +386,6 @@ nmap <F8> :hi Normal ctermbg=214<CR>:highlight NonText ctermbg=214<CR>
 
 nmap <F8> :execute ":color ".g:colors_name <CR>
 
-" Golang
-au FileType go nmap <leader>r <Plug>(go-run)
-au FileType go nmap <leader>t <Plug>(go-test)
-au FileType go nmap <leader>c <Plug>(go-coverage)
 au FileType xml nnoremap <leader>x :%!xmllint --format -<CR>
 au FileType json nnoremap <leader>x :%!jq .<CR>
 
