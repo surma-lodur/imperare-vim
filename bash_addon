@@ -15,64 +15,64 @@ export VM=true
 #export TERM=screen-256color
 
 parse_git_branch() {
-  git name-rev HEAD 2> /dev/null | sed 's#HEAD\ \(.*\)#(git::\1)#'
+  PARSE_BASH_PREFIX='⚠️ 💣'
+  PARSE_BASH_SUFFIX='💣⚠️ '
+
+  git branch 2>/dev/null |
+    sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/' |
+    sed -e "s/main/$PARSE_BASH_PREFIX main $PARSE_BASH_SUFFIX/g" |
+    sed -e "s/master/$PARSE_BASH_PREFIX master $PARSE_BASH_SUFFIX/g" |
+    sed -e "s/develop/$PARSE_BASH_PREFIX develop $PARSE_BASH_SUFFIX/g"
 }
-parse_svn_branch() {
-  parse_svn_url | sed -e 's#^'"$(parse_svn_repository_root)"'##g' | awk -F / '{print "(svn::"$1 "/" $2 ")"}'
-}
-parse_svn_url() {
-  svn info 2>/dev/null | sed -ne 's#^URL: ##p'
-}
-parse_svn_repository_root() {
-  svn info 2>/dev/null | sed -ne 's#^Repository Root: ##p'
-}
-detect_spring(){
-  running=$(ps aux | grep spring | grep  ${PWD##*/} | wc -l )
-  if [[ $running -gt 0 ]]
-  then
+
+detect_spring() {
+  running=$(ps aux | grep spring | grep ${PWD##*/} | wc -l)
+  if [[ $running -gt 0 ]]; then
     echo ""
   else
     echo "(SPRING)"
   fi
 }
 
-parse_repos(){
+parse_repos() {
   if [ -d "$(pwd)/.git" ]; then
     parse_git_branch
-    #    elif [ -d ./.svn ]; then
-    #        parse_svn_branch
   fi
 }
 
-parse_state(){
-  [ $(git rev-parse HEAD) = $(git ls-remote $(git rev-parse --abbrev-ref @{u} | \
+parse_state() {
+  [ $(git rev-parse HEAD) = $(git ls-remote $(git rev-parse --abbrev-ref @{u} |
     sed 's/\// /g') | cut -f1) ] && echo '' || echo '*'
 }
 
-__rbenv_ps1 ()
-{
-  rbenv_ruby_version=`rbenv version | sed -e 's/ .*//'`
+__rbenv_ps1() {
+  rbenv_ruby_version=$(rbenv version | sed -e 's/ .*//')
   printf $rbenv_ruby_version
 }
 
-
-
-
 ruby_version_name() {
   #if  then
-    echo "<$(__rbenv_ps1)>"
- # else
+  echo " $(__rbenv_ps1)"
+  # else
   #  echo "<${GEM_HOME##*/}>"
   #fi
 }
 
-detect_basename(){
-  printf "\033k$(basename `pwd`)\033\\"
+__nvm_ps1() {
+  nvm_version=$(nvm current | sed -e 's/ .*//' | sed -e 's/v//')
+  printf $nvm_version
+}
+
+nodejs_version_name() {
+  echo " $(__nvm_ps1)"
+}
+
+detect_basename() {
+  printf "\033k$(basename $(pwd))\033\\"
 
 }
 
-function prompt
-{
+function prompt {
   local GRAY="\[\033[1;30m\]"
   local LIGHT_GRAY="\[\033[0;37m\]"
   local CYAN="\[\033[0;36m\]"
@@ -91,13 +91,8 @@ function prompt
   local BLACK="\[\033[0;30m\]"
   local WHITE="\[\033[1;37m\]"
 
-  #  PS1="$LIGHT_GREEN\u$LIGHT_GRAY@$LIGHT_CYAN\h$LIGHT_RED<\$(parse_rvm)>$LIGHT_GRAY:$PURPLE\w $LIGHT_GRAY
-  #($LIGHT_BLUE\$(date +%H:%M:%S)$LIGHT_GRAY) $LIGHT_GREEN\$(parse_repos)$LIGHT_GRAY "
-
-  PS1="$LIGHT_GREEN\u$LIGHT_GRAY@$LIGHT_CYAN\h$LIGHT_GRAY($LIGHT_BLUE\$(date +%H:%M:%S)$LIGHT_GRAY) $PURPLE\w\$(detect_basename)
-  $LIGHT_RED\$(ruby_version_name)$LIGHT_PURPLE$LIGHT_GREEN\$(parse_repos)$LIGHT_GRAY: "
-  #PS1="$YELLOW\u$NO_COLOUR($LIGHT_CYAN\h$LIGHT_GREEN  \w$NO_COLOUR)
-  #($LIGHT_GREEN\$(date +%H:%M:%S)$LIGHT_GRAY) $LIGHT_GREEN\$(parse_repos)$LIGHT_GRAY "
-
+  PS1="$LIGHT_GREEN\u$LIGHT_GRAY@$LIGHT_CYAN\h$LIGHT_GRAY($LIGHT_BLUE\$(date +%H:%M:%S)$LIGHT_GRAY) $PURPLE\w\n$LIGHT_RED\$(ruby_version_name)$GRAY|$LIGHT_CYAN\$(nodejs_version_name)$LIGHT_GREEN \$(parse_repos)$LIGHT_GRAY: "
+  PS2='$LIGHT_BLUE>$LIGHT_GRAY '
+  export REMOTE_PS1="$LIGHT_GREEN\u$LIGHT_GRAY@$LIGHT_CYAN\h$LIGHT_GRAY($LIGHT_BLUE\$(date +%H:%M:%S)$LIGHT_GRAY) $PURPLE\w\n$LIGHT_GREEN $LIGHT_GRAY: "
 }
 prompt
