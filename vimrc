@@ -133,8 +133,14 @@ Plug 'maxmellon/vim-jsx-pretty',   {'for': ['jsx', 'javascript', 'js']}
 Plug 'stephpy/vim-yaml',           {'for': 'yaml'}
 Plug 'leafgarland/typescript-vim', {'for': ['js', 'javascript', 'ts']}
 Plug 'ap/vim-css-color',           {'for': ['html', 'haml', 'css']}
+<<<<<<< HEAD
 Plug 'kchmck/vim-coffee-script',   {'for': 'coffee'}
 "Plug 'chrisbra/csv.vim',         {'for': ['csv']}
+=======
+"Plugin 'kchmck/vim-coffee-script', {for: 'coffee'}
+"Plugin 'chrisbra/csv.vim'
+Plug 'ap/vim-css-color'
+>>>>>>> 57987cb (cleanup)
 
 
 if executable('fd')
@@ -421,6 +427,11 @@ let g:gruvbox_contrast_light='high'
 colorscheme gruvbox
 
 set background=dark
+augroup my-glyph-palette
+  autocmd! *
+  autocmd FileType fern call glyph_palette#apply()
+  autocmd FileType nerdtree,startify call glyph_palette#apply()
+augroup END
 
 augroup my-glyph-palette
   autocmd! *
