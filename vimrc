@@ -69,9 +69,12 @@ else
   let ruby_version = system('ruby -v')
   let new_ruby = matchstr(ruby_version, 'ruby\s[2-9]\.[2-9]\.')
 
-  Plug 'metalelf0/supertab',   empty(new_ruby) ? {} : {'on': []}
-  Plug 'garbas/vim-snipmate', empty(new_ruby) ? {} : {'on': []}
-  Plug 'neoclide/coc.nvim',   empty(new_ruby) ? {'on': [], 'branch': 'release'} : {'branch': 'release'}
+  if &diff
+  else
+    Plug 'metalelf0/supertab',  empty(new_ruby)  ? {} : {'on': []}
+    Plug 'garbas/vim-snipmate', empty(new_ruby) ? {} : {'on': []}
+    Plug 'neoclide/coc.nvim',   empty(new_ruby) ? {'on': [], 'branch': 'release'} : {'branch': 'release'}
+  end
 
   if empty(new_ruby)
   else
@@ -97,11 +100,12 @@ if has('nvim')
 end
 
 Plug 'ctrlpvim/ctrlp.vim',      &diff ? {'on': []} : {'on': 'CtrlP'} " File search by file name
-Plug 'yegappan/grep',         &diff ? {'on': []} : {} " Full text search via ack-grep or ag
-Plug 'tomtom/tlib_vim'         " Needed for snipmate
-Plug 'MarcWeber/vim-addon-mw-utils'
-Plug 'vim-scripts/taglist.vim'  " provides  a method tree per file
-Plug 'bling/vim-airline'        " Colourfull status line
+Plug 'yegappan/grep',           &diff ? {'on': []} : {} " Full text search via ack-grep or ag
+Plug 'tomtom/tlib_vim',         &diff ? {'on': []} : {} " Needed for snipmate
+Plug 'MarcWeber/vim-addon-mw-utils', &diff ? {'on': []} : {}
+"Plug 'vim-scripts/taglist.vim'  " provides  a method tree per file
+Plug 'preservim/tagbar',        &diff ? {'on': []} : {}
+Plug 'bling/vim-airline',       &diff ? {'on': []} : {} " Colourfull status line
 Plug 'w0rp/ale',                &diff ? {'on': []} : {}
 
 Plug 'jlanzarotta/bufexplorer', &diff ? {'on': []} : {} " Explore open files
@@ -114,7 +118,7 @@ Plug 'lambdalisue/glyph-palette.vim',             &diff ? {'on': []} : {} " Dire
 
 
 Plug 'chrisbra/vim-diff-enhanced', &diff ? {} : {'on': []}
-"Plugin 'powerman/vim-plugin-AnsiEsc.git'
+"Plug 'powerman/vim-plugin-AnsiEsc.git'
 
 
 " ########################
@@ -129,8 +133,8 @@ Plug 'maxmellon/vim-jsx-pretty',   {'for': ['jsx', 'javascript', 'js']}
 Plug 'stephpy/vim-yaml',           {'for': 'yaml'}
 Plug 'leafgarland/typescript-vim', {'for': ['js', 'javascript', 'ts']}
 Plug 'ap/vim-css-color',           {'for': ['html', 'haml', 'css']}
-"Plugin 'kchmck/vim-coffee-script', {for: 'coffee'}
-"Plugin 'chrisbra/csv.vim'
+Plug 'kchmck/vim-coffee-script',   {'for': 'coffee'}
+"Plug 'chrisbra/csv.vim',         {'for': ['csv']}
 
 
 if executable('fd')
@@ -154,7 +158,7 @@ endif
 "Plugin 'noahfrederick/vim-hemisu.git'
 "Plugin 'rakr/vim-two-firewatch'
 "Plugin 'mkarmona/materialbox.git'
-Plug 'morhetz/gruvbox'
+Plug 'atidyshirt/gruvbox-material-community'
 
 " light theme
 "Plugin 'vim-scripts/summerfruit256.vim.git'
@@ -310,6 +314,13 @@ let Tlist_Use_Right_Window = 1
 let Tlist_Auto_Update = 1
 let Tlist_WinWidth = 50
 
+" configure tagbar
+let g:tagbar_compact=1
+let g:tagbar_show_visibility =1
+let g:tagbar_indent = 1
+let g:tagbar_width = max([25, winwidth(0) / 3])
+let g:tagbar_wrap = 1
+
 " netrw configure
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
@@ -372,7 +383,8 @@ map <F8> :!ctags -R -n --fields=+i+K+S+l+m+a <CR>
 
 " Displays the tag list, this is a list of used Methods/constants which are
 " currently open into vim
-map <leader>m :TlistToggle<CR>
+"map <leader>m :TlistToggle<CR>
+map <leader>m :TagbarToggle<CR>
 
 map <leader>b :BufExplorer<CR>
 map <F12> :BufExplorer<CR>
