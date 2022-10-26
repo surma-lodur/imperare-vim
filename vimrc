@@ -1,4 +1,4 @@
-set nocompatible              " be iMproved, required
+    set nocompatible              " be iMproved, required
 filetype off                  " required
 
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -60,6 +60,7 @@ endif
 " ##  Plugins  ##
 " ###############
 
+
 let g:snipMate = { 'snippet_version' : 0 }
 if has('win32') || has('win64') || has('win32unix') || has('win95')
   Plug 'ervandew/supertab.git'
@@ -71,33 +72,46 @@ else
 
   if &diff
   else
-    Plug 'metalelf0/supertab',  empty(new_ruby)  ? {} : {'on': []}
-    Plug 'garbas/vim-snipmate', empty(new_ruby) ? {} : {'on': []}
-    Plug 'neoclide/coc.nvim',   empty(new_ruby) ? {'on': [], 'branch': 'release'} : {'branch': 'release'}
-  end
+    if has('nvim')
+      Plug 'neovim/nvim-lspconfig'
+      Plug 'hrsh7th/cmp-nvim-lsp', { 'branch': 'main'}
+      Plug 'hrsh7th/cmp-buffer', { 'branch': 'main'}
+      Plug 'hrsh7th/cmp-path', { 'branch': 'main'}
+      Plug 'hrsh7th/cmp-cmdline', { 'branch': 'main'}
+      Plug 'hrsh7th/nvim-cmp', { 'branch': 'main'}
+
+      Plug 'hrsh7th/cmp-vsnip', { 'branch': 'main'}
+      Plug 'hrsh7th/vim-vsnip', { 'branch': 'main'}
+
+    else
+      Plug 'metalelf0/supertab',  empty(new_ruby)  ? {} : {'on': []}
+      Plug 'garbas/vim-snipmate', empty(new_ruby) ? {} : {'on': []}
+      Plug 'neoclide/coc.nvim',   empty(new_ruby) ? {'on': [], 'branch': 'release'} : {'branch': 'release'}
+    endif
+  endif
 
   if empty(new_ruby)
   else
-    " Use tab for trigger completion with characters ahead and navigate.
-    " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-    " other plugin before putting this into your config.
-    inoremap <silent><expr> <TAB>
-          \ pumvisible() ? "\<C-n>" :
-          \ <SID>check_back_space() ? "\<TAB>" :
-          \ coc#refresh()
-    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+    if has('nvim')
+    else
+      " Use tab for trigger completion with characters ahead and navigate.
+      " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+      " other plugin before putting this into your config.
+      inoremap <silent><expr> <TAB>
+            \ pumvisible() ? "\<C-n>" :
+            \ <SID>check_back_space() ? "\<TAB>" :
+            \ coc#refresh()
+      inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-    function! s:check_back_space() abort
-      let col = col('.') - 1
-      return !col || getline('.')[col - 1]  =~# '\s'
-    endfunction
-  end
+      function! s:check_back_space() abort
+        let col = col('.') - 1
+        return !col || getline('.')[col - 1]  =~# '\s'
+      endfunction
+    endif
+  endif
   let g:deoplete#enable_at_startup = 1
 endif
 
-if has('nvim')
-  Plug 'antoinemadec/FixCursorHold.nvim'
-end
 
 Plug 'ctrlpvim/ctrlp.vim',      &diff ? {'on': []} : {'on': 'CtrlP'} " File search by file name
 Plug 'yegappan/grep',           &diff ? {'on': []} : {} " Full text search via ack-grep or ag
@@ -106,7 +120,7 @@ Plug 'MarcWeber/vim-addon-mw-utils', &diff ? {'on': []} : {}
 "Plug 'vim-scripts/taglist.vim'  " provides  a method tree per file
 Plug 'preservim/tagbar',        &diff ? {'on': []} : {}
 Plug 'bling/vim-airline',       &diff ? {'on': []} : {} " Colourfull status line
-Plug 'w0rp/ale',                &diff ? {'on': []} : {}
+Plug 'dense-analysis/ale',                &diff ? {'on': []} : {}
 
 Plug 'jlanzarotta/bufexplorer', &diff ? {'on': []} : {} " Explore open files
 Plug 'tpope/vim-git',           &diff ? {'on': []} : {} " Git Support
@@ -133,14 +147,8 @@ Plug 'maxmellon/vim-jsx-pretty',   {'for': ['jsx', 'javascript', 'js']}
 Plug 'stephpy/vim-yaml',           {'for': 'yaml'}
 Plug 'leafgarland/typescript-vim', {'for': ['js', 'javascript', 'ts']}
 Plug 'ap/vim-css-color',           {'for': ['html', 'haml', 'css']}
-<<<<<<< HEAD
-Plug 'kchmck/vim-coffee-script',   {'for': 'coffee'}
-"Plug 'chrisbra/csv.vim',         {'for': ['csv']}
-=======
 "Plugin 'kchmck/vim-coffee-script', {for: 'coffee'}
 "Plugin 'chrisbra/csv.vim'
-Plug 'ap/vim-css-color'
->>>>>>> 57987cb (cleanup)
 
 
 if executable('fd')
@@ -149,7 +157,7 @@ if executable('fd')
 endif
 
 if &diff
-   let &diffexpr='EnhancedDiff#Diff("git diff", "--diff-algorithm=patience")'
+  let &diffexpr='EnhancedDiff#Diff("git diff", "--diff-algorithm=patience")'
 endif
 
 " ##############
@@ -164,7 +172,7 @@ endif
 "Plugin 'noahfrederick/vim-hemisu.git'
 "Plugin 'rakr/vim-two-firewatch'
 "Plugin 'mkarmona/materialbox.git'
-Plug 'atidyshirt/gruvbox-material-community'
+Plug 'gruvbox-community/gruvbox'
 
 " light theme
 "Plugin 'vim-scripts/summerfruit256.vim.git'
@@ -249,6 +257,79 @@ au BufNewFile,BufRead *.{json,node} set ft=javascript
 " arduino
 au BufNewFile,BufRead *.ino set ft=cpp
 
+if has('nvim')
+
+  lua <<EOF
+  -- Set up nvim-cmp.
+  local cmp = require'cmp'
+
+  cmp.setup({
+  snippet = {
+    -- REQUIRED - you must specify a snippet engine
+    expand = function(args)
+    vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+    -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+    -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+    -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+    end,
+    },
+  window = {
+    -- completion = cmp.config.window.bordered(),
+    -- documentation = cmp.config.window.bordered(),
+    },
+  mapping = cmp.mapping.preset.insert({
+  ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+  ['<C-f>'] = cmp.mapping.scroll_docs(4),
+  ['<C-Space>'] = cmp.mapping.complete(),
+  ['<C-e>'] = cmp.mapping.abort(),
+  ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+  }),
+sources = cmp.config.sources({
+{ name = 'nvim_lsp' },
+{ name = 'vsnip' }, -- For vsnip users.
+-- { name = 'luasnip' }, -- For luasnip users.
+-- { name = 'ultisnips' }, -- For ultisnips users.
+-- { name = 'snippy' }, -- For snippy users.
+}, {
+{ name = 'buffer' },
+})
+  })
+
+-- Set configuration for specific filetype.
+cmp.setup.filetype('gitcommit', {
+  sources = cmp.config.sources({
+  { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
+  }, {
+  { name = 'buffer' },
+  })
+})
+
+  -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline({ '/', '?' }, {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+      { name = 'buffer' }
+      }
+    })
+
+  -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+    { name = 'path' }
+    }, {
+    { name = 'cmdline' }
+    })
+  })
+
+-- Set up lspconfig.
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+-- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
+require('lspconfig')['<YOUR_LSP_SERVER>'].setup {
+  capabilities = capabilities
+  }
+EOF
+endif
 
 " ############################
 " ##  Plugin Configuration  ##
@@ -284,7 +365,8 @@ else
         \ '*': ['remove_trailing_lines', 'trim_whitespace'],
         \ 'javascript': ['eslint', 'prettier'],
         \ 'ruby':       ['rubocop'],
-        \ 'css':        ['csslint'],
+        \ 'css':        ['csslint', 'prettier'],
+        \ 'html':       ['prettier'],
         \ 'go':         ['gofmt'],
         \ 'elixir':     ['mix_format'],
         \ 'sh':         ['shfmt'],
