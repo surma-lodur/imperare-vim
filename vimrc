@@ -62,64 +62,68 @@ endif
 
 
 let g:snipMate = { 'snippet_version' : 0 }
-if has('win32') || has('win64') || has('win32unix') || has('win95')
-  Plug 'ervandew/supertab.git'
-  Plug 'garbas/vim-snipmate.git'
+let ruby_version = system('ruby -v')
+let new_ruby = matchstr(ruby_version, 'ruby\s[2-9]\.[2-9]\.')
 
+if &diff
 else
-  let ruby_version = system('ruby -v')
-  let new_ruby = matchstr(ruby_version, 'ruby\s[2-9]\.[2-9]\.')
+  if has('nvim')
+    Plug 'neovim/nvim-lspconfig'
+    Plug 'hrsh7th/cmp-nvim-lsp', { 'branch': 'main'}
+    Plug 'hrsh7th/cmp-buffer', { 'branch': 'main'}
+    Plug 'hrsh7th/cmp-path', { 'branch': 'main'}
+    Plug 'hrsh7th/cmp-cmdline', { 'branch': 'main'}
+    Plug 'hrsh7th/nvim-cmp', { 'branch': 'main'}
 
-  if &diff
+    Plug 'hrsh7th/cmp-vsnip', { 'branch': 'main'}
+    Plug 'hrsh7th/vim-vsnip', { 'branch': 'main'}
+
   else
-    if has('nvim')
-      Plug 'neovim/nvim-lspconfig'
-      Plug 'hrsh7th/cmp-nvim-lsp', { 'branch': 'main'}
-      Plug 'hrsh7th/cmp-buffer', { 'branch': 'main'}
-      Plug 'hrsh7th/cmp-path', { 'branch': 'main'}
-      Plug 'hrsh7th/cmp-cmdline', { 'branch': 'main'}
-      Plug 'hrsh7th/nvim-cmp', { 'branch': 'main'}
-
-      Plug 'hrsh7th/cmp-vsnip', { 'branch': 'main'}
-      Plug 'hrsh7th/vim-vsnip', { 'branch': 'main'}
-
-    else
-      Plug 'metalelf0/supertab',  empty(new_ruby)  ? {} : {'on': []}
-      Plug 'garbas/vim-snipmate', empty(new_ruby) ? {} : {'on': []}
-      Plug 'neoclide/coc.nvim',   empty(new_ruby) ? {'on': [], 'branch': 'release'} : {'branch': 'release'}
-    endif
+    Plug 'tomtom/tlib_vim',         &diff ? {'on': []} : {} " Needed for snipmate
+    Plug 'metalelf0/supertab',  empty(new_ruby)  ? {} : {'on': []}
+    Plug 'garbas/vim-snipmate', empty(new_ruby) ? {} : {'on': []}
+    Plug 'neoclide/coc.nvim',   empty(new_ruby) ? {'on': [], 'branch': 'release'} : {'branch': 'release'}
   endif
-
-  if empty(new_ruby)
-  else
-    if has('nvim')
-    else
-      " Use tab for trigger completion with characters ahead and navigate.
-      " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-      " other plugin before putting this into your config.
-      inoremap <silent><expr> <TAB>
-            \ pumvisible() ? "\<C-n>" :
-            \ <SID>check_back_space() ? "\<TAB>" :
-            \ coc#refresh()
-      inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-      function! s:check_back_space() abort
-        let col = col('.') - 1
-        return !col || getline('.')[col - 1]  =~# '\s'
-      endfunction
-    endif
-  endif
-  let g:deoplete#enable_at_startup = 1
 endif
 
+if empty(new_ruby)
+else
+  if has('nvim')
+  else
+    " Use tab for trigger completion with characters ahead and navigate.
+    " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+    " other plugin before putting this into your config.
+    inoremap <silent><expr> <TAB>
+          \ pumvisible() ? "\<C-n>" :
+          \ <SID>check_back_space() ? "\<TAB>" :
+          \ coc#refresh()
+    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-Plug 'ctrlpvim/ctrlp.vim',      &diff ? {'on': []} : {'on': 'CtrlP'} " File search by file name
+    function! s:check_back_space() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1]  =~# '\s'
+    endfunction
+  endif
+endif
+let g:deoplete#enable_at_startup = 1
+
+
+if has('nvim')
+  Plug 'nvim-lua/plenary.nvim'
+  Plug 'nvim-telescope/telescope.nvim', &diff ? {'on': []} : {} " File search by file name
+  Plug 'nvim-lualine/lualine.nvim',       &diff ? {'on': []} : {} " Colourfull status line
+
+  Plug 'sindrets/diffview.nvim', &diff ? {} : {'on': []}
+else
+  Plug 'ctrlpvim/ctrlp.vim',      &diff ? {'on': []} : {'on': 'CtrlP'} " File search by file name
+  Plug 'bling/vim-airline',       &diff ? {'on': []} : {} " Colourfull status line
+
+  Plug 'chrisbra/vim-diff-enhanced', &diff ? {} : {'on': []}
+endif
 Plug 'yegappan/grep',           &diff ? {'on': []} : {} " Full text search via ack-grep or ag
-Plug 'tomtom/tlib_vim',         &diff ? {'on': []} : {} " Needed for snipmate
 Plug 'MarcWeber/vim-addon-mw-utils', &diff ? {'on': []} : {}
 "Plug 'vim-scripts/taglist.vim'  " provides  a method tree per file
 Plug 'preservim/tagbar',        &diff ? {'on': []} : {}
-Plug 'bling/vim-airline',       &diff ? {'on': []} : {} " Colourfull status line
 Plug 'dense-analysis/ale',                &diff ? {'on': []} : {}
 
 Plug 'jlanzarotta/bufexplorer', &diff ? {'on': []} : {} " Explore open files
@@ -131,7 +135,6 @@ Plug 'ryanoasis/vim-devicons',                    &diff ? {'on': []} : {} " Dire
 Plug 'lambdalisue/glyph-palette.vim',             &diff ? {'on': []} : {} " Directory Tree
 
 
-Plug 'chrisbra/vim-diff-enhanced', &diff ? {} : {'on': []}
 "Plug 'powerman/vim-plugin-AnsiEsc.git'
 
 
@@ -325,9 +328,13 @@ cmp.setup.filetype('gitcommit', {
 -- Set up lspconfig.
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-require('lspconfig')['<YOUR_LSP_SERVER>'].setup {
-  capabilities = capabilities
-  }
+-- require('lspconfig')['<YOUR_LSP_SERVER>'].setup {
+--  capabilities = capabilities
+--  }
+require'lspconfig'.solargraph.setup{}
+require'lspconfig'.rust_analyzer.setup{}
+require'lspconfig'.gopls.setup{}
+require('lualine').setup()
 EOF
 endif
 
@@ -335,47 +342,37 @@ endif
 " ##  Plugin Configuration  ##
 " ############################
 
-if version < 800
-  set lazyredraw
-  set ttyfast
-  "Syntax Checker
-  set statusline+=%#warningmsg#
-  set statusline+=%{SyntasticStatuslineFlag()}
-  set statusline+=%*
+set lazyredraw
+set ttyfast
 
-else
-  set lazyredraw
-  set ttyfast
-
-  let g:ale_lint_on_text_changed = 'never'
-  let g:ale_lint_on_insert_leave = 1
-  let g:ale_lint_on_enter = 0
-  let g:ale_lint_delay = 500
-  let g:ale_completion_enabled = 1
-  let g:ale_fix_on_save = 1
-  let g:ale_cache_executable_check_failures=1
-  let g:ale_sign_error = '❗'
-  let g:ale_sign_warning = '⚠️ '
-  let g:ale_linters = {
-        \ 'elixir':     ['dialyxir'],
-        \ }
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_insert_leave = 1
+let g:ale_lint_on_enter = 0
+let g:ale_lint_delay = 500
+let g:ale_completion_enabled = 1
+let g:ale_fix_on_save = 1
+let g:ale_cache_executable_check_failures=1
+let g:ale_sign_error = '❗'
+let g:ale_sign_warning = '⚠️ '
+let g:ale_linters = {
+      \ 'elixir':     ['dialyxir'],
+      \ }
 
 
-  let g:ale_fixers = {
-        \ '*': ['remove_trailing_lines', 'trim_whitespace'],
-        \ 'javascript': ['eslint', 'prettier'],
-        \ 'ruby':       ['rubocop'],
-        \ 'css':        ['csslint', 'prettier'],
-        \ 'html':       ['prettier'],
-        \ 'go':         ['gofmt'],
-        \ 'elixir':     ['mix_format'],
-        \ 'sh':         ['shfmt'],
-        \ 'bash':       ['shfmt'],
-        \ }
-  " , 'eslint'],
-  let g:airline#extensions#ale#enabled = 1
-  let g:ale_ruby_rubocop_executable = 'bundle'
-endif
+let g:ale_fixers = {
+      \ '*': ['remove_trailing_lines', 'trim_whitespace'],
+      \ 'javascript': ['eslint', 'prettier'],
+      \ 'ruby':       ['rubocop'],
+      \ 'css':        ['csslint', 'prettier'],
+      \ 'html':       ['prettier'],
+      \ 'go':         ['gofmt'],
+      \ 'elixir':     ['mix_format'],
+      \ 'sh':         ['shfmt'],
+      \ 'bash':       ['shfmt'],
+      \ }
+" , 'eslint'],
+let g:airline#extensions#ale#enabled = 1
+let g:ale_ruby_rubocop_executable = 'bundle'
 
 
 " CtrlP config
@@ -423,21 +420,26 @@ let g:netrw_winsize = 10
 " Leader setting
 let mapleader = ","
 
-" Open files with <leader>f
-map <leader>f :CtrlP<cr>
+if has('nvim')
+  nnoremap <leader>f <cmd>Telescope find_files<cr>
 
-" Open files, limited to the directory of the current file, with <leader>gf
-" This requires the %% mapping found below.
-map <leader>gf :CtrlP %%<cr>
+else
+  " Open files with <leader>f
+  map <leader>f :CtrlP<cr>
 
-" Open files limited to a specific rails-path
-map <leader>gv :CtrlP app/views<cr>
-map <leader>gc :CtrlP app/controllers<cr>
-map <leader>gm :CtrlP app/models<cr>
-map <leader>gh :CtrlP app/helpers<cr>
-map <leader>gl :CtrlP lib<cr>
-map <leader>gp :CtrlP public<cr>
-map <leader>gs :CtrlP spec<cr>
+  " Open files, limited to the directory of the current file, with <leader>gf
+  " This requires the %% mapping found below.
+  map <leader>gf :CtrlP %%<cr>
+
+  " Open files limited to a specific rails-path
+  map <leader>gv :CtrlP app/views<cr>
+  map <leader>gc :CtrlP app/controllers<cr>
+  map <leader>gm :CtrlP app/models<cr>
+  map <leader>gh :CtrlP app/helpers<cr>
+  map <leader>gl :CtrlP lib<cr>
+  map <leader>gp :CtrlP public<cr>
+  map <leader>gs :CtrlP spec<cr>
+endif
 
 " Opens an edit command with the path of the currently edited file filled in
 " Normal mode: <Leader>e
@@ -460,7 +462,6 @@ map <C-K> <C-W><C-K>
 map <leader>x  "+y
 map <leader>v  "+gP
 
-map <F2> :Fern . -drawer -stay<CR>
 "map <F2> :Vexplore<CR>
 "map <F2> :NERDTreeToggle<CR>
 "map <C-N> :NERDTreeFind<cr>
@@ -524,12 +525,6 @@ let g:NERDTreeNodeDelimiter = "\u00a0"
 let g:NERDTreeDirArrowExpandable = ''
 let g:NERDTreeDirArrowCollapsible = ''
 let g:DevIconsEnableFoldersOpenClose = 1
-
-let g:fern#renderer = "devicons"
-"function! s:init_fern() abort
-"    nmap <buffer> <left> <Plug>(fern-action-expand)
-"    nmap <buffer> <right> <Plug>(fern-action-collapse)
-"endfunction
 
 nnoremap <leader>q :let g:ale_fix_on_save = 1<cr>
 nnoremap <leader>a :let g:ale_fix_on_save = 0<cr>
