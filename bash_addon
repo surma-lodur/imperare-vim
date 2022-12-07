@@ -7,6 +7,7 @@ alias gp="git pull"
 alias gfhs="git flow hotfix start"
 alias gfhf="git flow hotfix finish"
 alias gps="git push"
+alias kdash="minikube dashboard --port=55912 --url"
 
 alias cleanup-docker='docker image prune -a --filter "until=24h" && docker container prune --filter "until=24h" '
 export GIT_MERGE_AUTOEDIT=no
@@ -15,8 +16,8 @@ export VM=true
 #export TERM=screen-256color
 
 parse_git_branch() {
-  PARSE_BASH_PREFIX='⚠️ 💣'
-  PARSE_BASH_SUFFIX='💣⚠️ '
+  PARSE_BASH_PREFIX='💣💣💣'
+  PARSE_BASH_SUFFIX='💣💣💣'
 
   git branch 2>/dev/null |
     sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/' |

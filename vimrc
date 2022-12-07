@@ -1,4 +1,4 @@
-    set nocompatible              " be iMproved, required
+set nocompatible              " be iMproved, required
 filetype off                  " required
 
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -36,6 +36,9 @@ else
   call plug#begin('~/.vim/plugged')
 
   if has("mac") || has("gui_macvim")
+    if !has("nvim")
+    let $VIMRUNTIME=system('echo -n $(brew --prefix vim )/share/vim/vim*/')
+    end
     "set guifont=Liberation\ Mono\ for\ Powerline:h14
     set guifont=Hack\ Nerd\ Font\ Mono:h14
     let g:ackprg="ag --nocolor --nogroup --column"
@@ -66,6 +69,19 @@ let ruby_version = system('ruby -v')
 let new_ruby = matchstr(ruby_version, 'ruby\s[2-9]\.[2-9]\.')
 
 if &diff
+  if has('nvim')
+    Plug 'neovim/nvim-lspconfig'
+    Plug 'hrsh7th/cmp-nvim-lsp', { 'branch': 'main'}
+    Plug 'hrsh7th/cmp-buffer', { 'branch': 'main'}
+    Plug 'hrsh7th/cmp-path', { 'branch': 'main'}
+    Plug 'hrsh7th/cmp-cmdline', { 'branch': 'main'}
+    Plug 'hrsh7th/nvim-cmp', { 'branch': 'main'}
+
+    Plug 'hrsh7th/cmp-vsnip', { 'branch': 'main'}
+    Plug 'hrsh7th/vim-vsnip', { 'branch': 'master'}
+    let g:LanguageClient_useVirtualText = 0
+  endif
+
 else
   if has('nvim')
     Plug 'neovim/nvim-lspconfig'
@@ -76,7 +92,8 @@ else
     Plug 'hrsh7th/nvim-cmp', { 'branch': 'main'}
 
     Plug 'hrsh7th/cmp-vsnip', { 'branch': 'main'}
-    Plug 'hrsh7th/vim-vsnip', { 'branch': 'main'}
+    Plug 'hrsh7th/vim-vsnip', { 'branch': 'master'}
+    let g:LanguageClient_useVirtualText = 0
 
   else
     Plug 'tomtom/tlib_vim',         &diff ? {'on': []} : {} " Needed for snipmate
@@ -89,6 +106,8 @@ endif
 if empty(new_ruby)
 else
   if has('nvim')
+    "inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+    "inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
   else
     " Use tab for trigger completion with characters ahead and navigate.
     " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
@@ -110,78 +129,87 @@ let g:deoplete#enable_at_startup = 1
 
 if has('nvim')
   Plug 'nvim-lua/plenary.nvim'
-  Plug 'nvim-telescope/telescope.nvim', &diff ? {'on': []} : {} " File search by file name
-  Plug 'nvim-lualine/lualine.nvim',       &diff ? {'on': []} : {} " Colourfull status line
+  Plug 'nvim-telescope/telescope.nvim' " File search by file name
+  Plug 'nvim-lualine/lualine.nvim' " Colourfull status line
 
-  Plug 'sindrets/diffview.nvim', &diff ? {} : {'on': []}
+  Plug 'mileszs/ack.vim',           &diff ? {'on': []} : {}
+  if executable('ag')
+    let g:ackprg = 'ag --vimgrep'
+  endif
+
+  Plug 'sindrets/diffview.nvim' ", &diff ? {} : {'on': []}
+  Plug 'nvim-tree/nvim-web-devicons' " optional, for file icons
+  Plug 'nvim-tree/nvim-tree.lua'
+
 else
   Plug 'ctrlpvim/ctrlp.vim',      &diff ? {'on': []} : {'on': 'CtrlP'} " File search by file name
   Plug 'bling/vim-airline',       &diff ? {'on': []} : {} " Colourfull status line
 
   Plug 'chrisbra/vim-diff-enhanced', &diff ? {} : {'on': []}
+  Plug 'yegappan/grep',           &diff ? {'on': []} : {} " Full text search via ack-grep or ag
+  Plug 'preservim/nerdtree',                        &diff ? {'on': []} : {'on': 'NERDTreeToggle'}     " Directory Tree
+
+  if &diff
+    let &diffexpr='EnhancedDiff#Diff("git diff", "--diff-algorithm=patience")'
+  endif
 endif
-Plug 'yegappan/grep',           &diff ? {'on': []} : {} " Full text search via ack-grep or ag
 Plug 'MarcWeber/vim-addon-mw-utils', &diff ? {'on': []} : {}
-"Plug 'vim-scripts/taglist.vim'  " provides  a method tree per file
 Plug 'preservim/tagbar',        &diff ? {'on': []} : {}
 Plug 'dense-analysis/ale',                &diff ? {'on': []} : {}
 
 Plug 'jlanzarotta/bufexplorer', &diff ? {'on': []} : {} " Explore open files
-Plug 'tpope/vim-git',           &diff ? {'on': []} : {} " Git Support
-Plug 'tpope/vim-fugitive',      &diff ? {'on': []} : {'on': 'Gblame'} " f.e. git blame integration
+Plug 'tpope/vim-fugitive',      &diff ? {'on': []} : {} " f.e. git blame integration
 Plug 'tpope/vim-commentary'
-Plug 'preservim/nerdtree',                        &diff ? {'on': []} : {'on': 'NERDTreeToggle'}     " Directory Tree
 Plug 'ryanoasis/vim-devicons',                    &diff ? {'on': []} : {} " Directory Tree
 Plug 'lambdalisue/glyph-palette.vim',             &diff ? {'on': []} : {} " Directory Tree
 
+Plug 'vim-scripts/AnsiEsc.vim'
 
 "Plug 'powerman/vim-plugin-AnsiEsc.git'
+
 
 
 " ########################
 " ##  language support  ##
 " ########################
-Plug 'fatih/vim-go',               {'for': 'go'}            " Go-Lang
-Plug 'vim-ruby/vim-ruby',          {'for': 'ruby'}
-Plug 'rust-lang/rust.vim',         {'for': 'rust'}
-Plug 'elixir-editors/vim-elixir',  {'for': 'elixir'}
-Plug 'pangloss/vim-javascript',    {'for': ['js', 'javascript']}
-Plug 'maxmellon/vim-jsx-pretty',   {'for': ['jsx', 'javascript', 'js']}
-Plug 'stephpy/vim-yaml',           {'for': 'yaml'}
-Plug 'leafgarland/typescript-vim', {'for': ['js', 'javascript', 'ts']}
+"
+if has('nvim')
+else
+  Plug 'fatih/vim-go',               {'for': 'go'}            " Go-Lang
+  Plug 'vim-ruby/vim-ruby',          {'for': 'ruby'}
+  Plug 'rust-lang/rust.vim',         {'for': 'rust'}
+  Plug 'elixir-editors/vim-elixir',  {'for': 'elixir'}
+  Plug 'pangloss/vim-javascript',    {'for': ['js', 'javascript']}
+  Plug 'maxmellon/vim-jsx-pretty',   {'for': ['jsx', 'javascript', 'js']}
+  Plug 'stephpy/vim-yaml',           {'for': 'yaml'}
+  Plug 'leafgarland/typescript-vim', {'for': ['js', 'javascript', 'ts']}
+  Plug 'kchmck/vim-coffee-script',   {'for': 'coffee'}
+endif
 Plug 'ap/vim-css-color',           {'for': ['html', 'haml', 'css']}
-"Plugin 'kchmck/vim-coffee-script', {for: 'coffee'}
-"Plugin 'chrisbra/csv.vim'
 
 
-if executable('fd')
-  let g:ctrlp_user_command = 'fd -c never "" %s'
-  let g:ctrlp_use_caching = 0
-endif
-
-if &diff
-  let &diffexpr='EnhancedDiff#Diff("git diff", "--diff-algorithm=patience")'
-endif
 
 " ##############
 " ##  themes  ##
 " ##############
 
-" Black
-"Plugin 'sickill/vim-monokai.git'
-"Plugin 'yantze/pt_black.git'
 
 " Invertable color theme
-"Plugin 'noahfrederick/vim-hemisu.git'
-"Plugin 'rakr/vim-two-firewatch'
-"Plugin 'mkarmona/materialbox.git'
+"Plug 'rakr/vim-two-firewatch'
+"Plug 'mkarmona/materialbox.git'
 Plug 'gruvbox-community/gruvbox'
 
-" light theme
-"Plugin 'vim-scripts/summerfruit256.vim.git'
-"Plugin 'vim-scripts/proton.git'
+let g:gruvbox_contrast_dark='high'
+let g:gruvbox_contrast_light='high'
+"let g:gruvbox_italic = 1
 
 call plug#end()
+
+set completeopt=menu,menuone,noselect
+
+colorscheme gruvbox
+
+set background=dark
 
 filetype plugin indent on    " required
 
@@ -207,6 +235,9 @@ set softtabstop=2
 set expandtab
 set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
 set diffopt=filler,context:0
+
+"set updatetime=1000
+"set shortmess+=c
 
 " GUI Settings
 ":set guioptions-=m  "remove menu bar
@@ -255,87 +286,14 @@ au BufRead,BufNewFile {Guardfile,Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru
 "au BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkup()
 
 " add json syntax highlighting
-au BufNewFile,BufRead *.{json,node} set ft=javascript
+" au BufNewFile,BufRead *.{json,node} set ft=javascript
 
 " arduino
 au BufNewFile,BufRead *.ino set ft=cpp
 
 if has('nvim')
-
-  lua <<EOF
-  -- Set up nvim-cmp.
-  local cmp = require'cmp'
-
-  cmp.setup({
-  snippet = {
-    -- REQUIRED - you must specify a snippet engine
-    expand = function(args)
-    vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-    -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-    -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-    -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
-    end,
-    },
-  window = {
-    -- completion = cmp.config.window.bordered(),
-    -- documentation = cmp.config.window.bordered(),
-    },
-  mapping = cmp.mapping.preset.insert({
-  ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-  ['<C-f>'] = cmp.mapping.scroll_docs(4),
-  ['<C-Space>'] = cmp.mapping.complete(),
-  ['<C-e>'] = cmp.mapping.abort(),
-  ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-  }),
-sources = cmp.config.sources({
-{ name = 'nvim_lsp' },
-{ name = 'vsnip' }, -- For vsnip users.
--- { name = 'luasnip' }, -- For luasnip users.
--- { name = 'ultisnips' }, -- For ultisnips users.
--- { name = 'snippy' }, -- For snippy users.
-}, {
-{ name = 'buffer' },
-})
-  })
-
--- Set configuration for specific filetype.
-cmp.setup.filetype('gitcommit', {
-  sources = cmp.config.sources({
-  { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
-  }, {
-  { name = 'buffer' },
-  })
-})
-
-  -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
-  cmp.setup.cmdline({ '/', '?' }, {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = {
-      { name = 'buffer' }
-      }
-    })
-
-  -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-  cmp.setup.cmdline(':', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({
-    { name = 'path' }
-    }, {
-    { name = 'cmdline' }
-    })
-  })
-
--- Set up lspconfig.
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
--- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
--- require('lspconfig')['<YOUR_LSP_SERVER>'].setup {
---  capabilities = capabilities
---  }
-require'lspconfig'.solargraph.setup{}
-require'lspconfig'.rust_analyzer.setup{}
-require'lspconfig'.gopls.setup{}
-require('lualine').setup()
-EOF
+  set mouse=
+  lua require('config')
 endif
 
 " ############################
@@ -349,13 +307,14 @@ let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_insert_leave = 1
 let g:ale_lint_on_enter = 0
 let g:ale_lint_delay = 500
-let g:ale_completion_enabled = 1
+let g:ale_completion_enabled = 0
 let g:ale_fix_on_save = 1
 let g:ale_cache_executable_check_failures=1
 let g:ale_sign_error = '❗'
 let g:ale_sign_warning = '⚠️ '
 let g:ale_linters = {
       \ 'elixir':     ['dialyxir'],
+      \ 'go':         ['golangci-lint']
       \ }
 
 
@@ -365,14 +324,18 @@ let g:ale_fixers = {
       \ 'ruby':       ['rubocop'],
       \ 'css':        ['csslint', 'prettier'],
       \ 'html':       ['prettier'],
-      \ 'go':         ['gofmt'],
+      \ 'go':         ['gofumpt'],
       \ 'elixir':     ['mix_format'],
       \ 'sh':         ['shfmt'],
       \ 'bash':       ['shfmt'],
       \ }
 " , 'eslint'],
-let g:airline#extensions#ale#enabled = 1
 let g:ale_ruby_rubocop_executable = 'bundle'
+let g:ale_go_golangci_lint_options = ' --fast '
+
+
+nnoremap <leader>r :let g:ale_fix_on_save = 1<cr>
+nnoremap <leader>R :let g:ale_fix_on_save = 0<cr>
 
 
 " CtrlP config
@@ -387,6 +350,7 @@ let g:ctrlp_custom_ignore = {
 
 " Status bar - Airline
 set laststatus=2
+let g:airline#extensions#ale#enabled = 1
 let g:airline_powerline_fonts=1
 let g:airline_enable_fugitive=1
 
@@ -413,6 +377,16 @@ let g:netrw_browse_split = 4
 let g:netrw_altv = 1
 let g:netrw_winsize = 10
 
+let g:NERDTreeNodeDelimiter = "\u00a0"
+let g:NERDTreeDirArrowExpandable = ''
+let g:NERDTreeDirArrowCollapsible = ''
+let g:DevIconsEnableFoldersOpenClose = 1
+
+set tabstop=2 shiftwidth=2 expandtab
+set mmp=5000
+let g:go_version_warning = 0
+
+
 " ####################
 " ##  key mappings  ##
 " ####################
@@ -422,7 +396,7 @@ let mapleader = ","
 
 if has('nvim')
   nnoremap <leader>f <cmd>Telescope find_files<cr>
-
+  nnoremap <leader>g <cmd>Telescope live_grep<cr>
 else
   " Open files with <leader>f
   map <leader>f :CtrlP<cr>
@@ -462,13 +436,16 @@ map <C-K> <C-W><C-K>
 map <leader>x  "+y
 map <leader>v  "+gP
 
-"map <F2> :Vexplore<CR>
-"map <F2> :NERDTreeToggle<CR>
-"map <C-N> :NERDTreeFind<cr>
+if has('nvim')
+map <F2> :NvimTreeToggle<CR>
+map <Leader>n :NvimTreeToggle<CR>
+else
+map <F2> :NERDTreeToggle<CR>
 map <Leader>n :NERDTreeToggle<CR>
+endif
 
 " ctags tags file generation for the current directory
-map <F8> :!ctags -R -n --fields=+i+K+S+l+m+a <CR>
+map <F3> :!ctags -R -n --fields=+i+K+S+l+m+a <CR>
 
 " Displays the tag list, this is a list of used Methods/constants which are
 " currently open into vim
@@ -480,17 +457,28 @@ map <F12> :BufExplorer<CR>
 
 
 " switch theme
-nmap <F5> :set background=dark<CR>
-nmap <F6> :set background=light<CR>
-nmap <F7> :hi Normal ctermbg=none<CR>:highlight NonText ctermbg=none<CR>
-nmap <F8> :hi Normal ctermbg=214<CR>:highlight NonText ctermbg=214<CR>
+nmap <F5> :let g:gruvbox_contrast_dark='soft' <CR>:set background=dark<CR>
+nmap <F6> :let g:gruvbox_contrast_dark='medium' <CR>:set background=dark<CR>
+nmap <F7> :let g:gruvbox_contrast_dark='hard' <CR>:set background=dark<CR>
+nmap <F8> :let g:gruvbox_contrast_light='soft' <CR>:set background=light<CR>
+nmap <F9> :let g:gruvbox_contrast_light='medium' <CR>:set background=light<CR>
+nmap <F10> :let g:gruvbox_contrast_light='hard' <CR>:set background=light<CR>
 
-nmap <F8> :execute ":color ".g:colors_name <CR>
+nmap <F11> :hi Normal guibg=NONE ctermbg=NONE<CR>
+" nmap <F8> :execute ":color ".g:colors_name <CR>
 
 au FileType xml nnoremap <leader>x :%!xmllint --format -<CR>
 au FileType json nnoremap <leader>x :%!jq .<CR>
 
 map <F4> :%s/\s\+$//e
+
+
+
+augroup my-glyph-palette
+  autocmd! *
+  autocmd FileType fern call glyph_palette#apply()
+  autocmd FileType nerdtree,startify call glyph_palette#apply()
+augroup END
 
 
 " Include user's local vim config
@@ -526,8 +514,6 @@ let g:NERDTreeDirArrowExpandable = ''
 let g:NERDTreeDirArrowCollapsible = ''
 let g:DevIconsEnableFoldersOpenClose = 1
 
-nnoremap <leader>q :let g:ale_fix_on_save = 1<cr>
-nnoremap <leader>a :let g:ale_fix_on_save = 0<cr>
 
 
 " :let $RBENV_VERSION="2.6.6"
