@@ -1,0 +1,113 @@
+[
+  {
+    "snippet sep": {
+      "prefix": [
+        "sep"
+      ],
+      "body": [
+        "#####${2:}",
+        "##  ${1:name}  ##",
+        "#####$2",
+        "${3}"
+      ]
+    }
+  },
+  {
+    "snippet pry": {
+      "prefix": "pry",
+      "body": [
+        "puts \"#{ '$' * 45}DEBUGGER\"",
+        "puts \"#{__FILE__}:#{__LINE__}\"",
+        "binding.pry"
+      ]
+    }
+  },
+  {
+    "snippet mcom": {
+      "prefix": "mcom",
+      "body": [
+        "##",
+        "# ${1}",
+        "#",
+        "# == Parameter",
+        "# * +${2}+",
+        "#",
+        "# == Format",
+        "# ${3}",
+        "#",
+        "# == Returns",
+        "# ${4}",
+        "#"
+      ]
+    }
+  },
+  {
+    "snippet context": {
+      "prefix": "context",
+      "body": [
+        "context '${1:}' do",
+        "${2:}",
+        "end"
+      ]
+    }
+  },
+  {
+    "snippet describe": {
+      "prefix": "describe",
+      "body": [
+        "describe '${1:}' do",
+        "${2:}",
+        "end"
+      ]
+    }
+  },
+  {
+    "snippet rdl": {
+      "prefix": "rdl",
+      "body": [
+        "Rails.logger.info ${1}"
+      ]
+    }
+  },
+  {
+    "snippet rdd": {
+      "prefix": "rdd",
+      "body": [
+        "Rails.logger.debug"
+      ]
+    }
+  },
+  {
+    "snippet rddd": {
+      "prefix": "rddd",
+      "body": [
+        "@timer = Time.now - @timer if @timer",
+        "Rails.logger.debug \"TIME\t#{@time}\"",
+        "Rails.logger.debug \"#{__FILE__}:#{__LINE__}\"",
+        "Rails.logger.debug ${1}",
+        "@timer = Time.now"
+      ]
+    }
+  },
+  {
+    "snippet pputs": {
+      "prefix": "pputs",
+      "body": [
+        "puts \"#{ '$' * 45}MARKE\"",
+        "puts \"#{__FILE__}:#{__LINE__}\"",
+        "puts \"#{ '$' * 50}\"",
+        "pp ${1}",
+        "puts \"#{ '$' * 50}\""
+      ]
+    }
+  },
+  {
+    "snippet debug": {
+      "prefix": "debug",
+      "body": [
+        "require 'ruby-debug'",
+        "debugger"
+      ]
+    }
+  }
+]

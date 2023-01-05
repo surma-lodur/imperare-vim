@@ -207,9 +207,27 @@ call plug#end()
 
 set completeopt=menu,menuone,noselect
 
+
 colorscheme gruvbox
 
 set background=dark
+
+let current_hour=strftime("%H")
+if current_hour >= 21
+  set background=dark
+  let g:gruvbox_contrast_dark='medium'
+elseif current_hour >= 16
+  set background=dark
+  let g:gruvbox_contrast_dark='high'
+
+elseif current_hour >= 9
+  set background=light
+  let g:gruvbox_contrast_light='high'
+else
+  set background=light
+  let g:gruvbox_contrast_light='soft'
+endif
+
 
 filetype plugin indent on    " required
 
@@ -294,6 +312,7 @@ au BufNewFile,BufRead *.ino set ft=cpp
 if has('nvim')
   set mouse=
   lua require('config')
+  let g:vsnip_snippet_dir= '~/.vim/snippets'
 endif
 
 " ############################
@@ -310,6 +329,7 @@ let g:ale_lint_delay = 500
 let g:ale_completion_enabled = 0
 let g:ale_fix_on_save = 1
 let g:ale_cache_executable_check_failures=1
+let g:ale_virtualtext_cursor = 0
 let g:ale_sign_error = '❗'
 let g:ale_sign_warning = '⚠️ '
 let g:ale_linters = {
@@ -325,7 +345,9 @@ let g:ale_fixers = {
       \ 'css':        ['csslint', 'prettier'],
       \ 'html':       ['prettier'],
       \ 'go':         ['gofumpt'],
+      \ 'c':          ['clang-format', 'astyle', 'clangtidy'],
       \ 'elixir':     ['mix_format'],
+      \ 'json':       ['fixjson'],
       \ 'sh':         ['shfmt'],
       \ 'bash':       ['shfmt'],
       \ }
@@ -491,13 +513,6 @@ if filereadable(expand("$HOME/_vimrc.local"))
 endif
 
 
-let g:gruvbox_contrast_dark='high'
-let g:gruvbox_contrast_light='high'
-"let g:gruvbox_italic = 1
-
-colorscheme gruvbox
-
-set background=dark
 augroup my-glyph-palette
   autocmd! *
   autocmd FileType fern call glyph_palette#apply()
