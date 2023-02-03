@@ -140,6 +140,7 @@ if has('nvim')
   Plug 'sindrets/diffview.nvim' ", &diff ? {} : {'on': []}
   Plug 'nvim-tree/nvim-web-devicons' " optional, for file icons
   Plug 'nvim-tree/nvim-tree.lua'
+  Plug 'nvim-treesitter/nvim-treesitter' " , {'do': ':TSUpdate'}
 
 else
   Plug 'ctrlpvim/ctrlp.vim',      &diff ? {'on': []} : {'on': 'CtrlP'} " File search by file name
@@ -198,6 +199,8 @@ Plug 'ap/vim-css-color',           {'for': ['html', 'haml', 'css']}
 "Plug 'rakr/vim-two-firewatch'
 "Plug 'mkarmona/materialbox.git'
 Plug 'gruvbox-community/gruvbox'
+Plug 'lifepillar/vim-solarized8'
+Plug 'NLKNguyen/papercolor-theme'
 
 let g:gruvbox_contrast_dark='high'
 let g:gruvbox_contrast_light='high'
@@ -329,7 +332,7 @@ let g:ale_lint_delay = 500
 let g:ale_completion_enabled = 0
 let g:ale_fix_on_save = 1
 let g:ale_cache_executable_check_failures=1
-let g:ale_virtualtext_cursor = 0
+let g:ale_virtualtext_cursor=0
 let g:ale_sign_error = '❗'
 let g:ale_sign_warning = '⚠️ '
 let g:ale_linters = {
@@ -342,7 +345,7 @@ let g:ale_fixers = {
       \ '*': ['remove_trailing_lines', 'trim_whitespace'],
       \ 'javascript': ['eslint', 'prettier'],
       \ 'ruby':       ['rubocop'],
-      \ 'css':        ['csslint', 'prettier'],
+      \ 'css':        ['prettier'],
       \ 'html':       ['prettier'],
       \ 'go':         ['gofumpt'],
       \ 'c':          ['clang-format', 'astyle', 'clangtidy'],
@@ -457,6 +460,18 @@ map <C-K> <C-W><C-K>
 " Copy paste to system clipboard
 map <leader>x  "+y
 map <leader>v  "+gP
+
+" " Copy to clipboard
+vnoremap  <leader>y  "+y
+nnoremap  <leader>Y  "+yg_
+nnoremap  <leader>y  "+y
+nnoremap  <leader>yy  "+yy
+
+" " Paste from clipboard
+nnoremap <leader>p "+p
+nnoremap <leader>P "+P
+vnoremap <leader>p "+p
+vnoremap <leader>P "+P
 
 if has('nvim')
 map <F2> :NvimTreeToggle<CR>
