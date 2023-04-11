@@ -114,6 +114,13 @@ require'lspconfig'.gopls.setup({
     }
   }
 })
+
+--require('lspconfig').elixirls.setup {
+--  cmd = { "elixir-ls" },
+--  on_attach = on_attach,
+--  capabilities = capabilities
+--}
+
 require('lualine').setup()
 
 require("nvim-tree").setup({

@@ -166,8 +166,6 @@ Plug 'lambdalisue/glyph-palette.vim',             &diff ? {'on': []} : {} " Dire
 
 Plug 'vim-scripts/AnsiEsc.vim'
 
-"Plug 'powerman/vim-plugin-AnsiEsc.git'
-
 
 
 " ########################
@@ -196,11 +194,12 @@ Plug 'ap/vim-css-color',           {'for': ['html', 'haml', 'css']}
 
 
 " Invertable color theme
-"Plug 'rakr/vim-two-firewatch'
 "Plug 'mkarmona/materialbox.git'
 Plug 'gruvbox-community/gruvbox'
 Plug 'lifepillar/vim-solarized8'
 Plug 'NLKNguyen/papercolor-theme'
+Plug 'rakr/vim-one'
+Plug 'rakr/vim-two-firewatch'
 
 let g:gruvbox_contrast_dark='high'
 let g:gruvbox_contrast_light='high'
@@ -209,7 +208,6 @@ let g:gruvbox_contrast_light='high'
 call plug#end()
 
 set completeopt=menu,menuone,noselect
-
 
 colorscheme gruvbox
 
@@ -257,13 +255,10 @@ set expandtab
 set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
 set diffopt=filler,context:0
 
-"set updatetime=1000
-"set shortmess+=c
-
 " GUI Settings
-":set guioptions-=m  "remove menu bar
-":set guioptions-=T  "remove toolbar
-":set guioptions-=r  "remove right-hand scroll bar
+:set guioptions-=m  "remove menu bar
+:set guioptions-=T  "remove toolbar
+:set guioptions-=r  "remove right-hand scroll bar
 ":set lines=55 columns=150
 
 " allow backspacing over everything in insert mode
@@ -359,9 +354,6 @@ let g:ale_ruby_rubocop_executable = 'bundle'
 let g:ale_go_golangci_lint_options = ' --fast '
 
 
-nnoremap <leader>r :let g:ale_fix_on_save = 1<cr>
-nnoremap <leader>R :let g:ale_fix_on_save = 0<cr>
-
 
 " CtrlP config
 " Tab completion
@@ -415,6 +407,9 @@ let g:go_version_warning = 0
 " ####################
 " ##  key mappings  ##
 " ####################
+
+nnoremap <leader>r :let g:ale_fix_on_save = 1<cr>
+nnoremap <leader>R :let g:ale_fix_on_save = 0<cr>
 
 " Leader setting
 let mapleader = ","
@@ -486,7 +481,6 @@ map <F3> :!ctags -R -n --fields=+i+K+S+l+m+a <CR>
 
 " Displays the tag list, this is a list of used Methods/constants which are
 " currently open into vim
-"map <leader>m :TlistToggle<CR>
 map <leader>m :TagbarToggle<CR>
 
 map <leader>b :BufExplorer<CR>
@@ -502,13 +496,12 @@ nmap <F9> :let g:gruvbox_contrast_light='medium' <CR>:set background=light<CR>
 nmap <F10> :let g:gruvbox_contrast_light='hard' <CR>:set background=light<CR>
 
 nmap <F11> :hi Normal guibg=NONE ctermbg=NONE<CR>
-" nmap <F8> :execute ":color ".g:colors_name <CR>
 
+" Autoformat
 au FileType xml nnoremap <leader>x :%!xmllint --format -<CR>
 au FileType json nnoremap <leader>x :%!jq .<CR>
 
 map <F4> :%s/\s\+$//e
-
 
 
 augroup my-glyph-palette
@@ -539,14 +532,3 @@ augroup my-glyph-palette
   autocmd FileType fern call glyph_palette#apply()
   autocmd FileType nerdtree,startify call glyph_palette#apply()
 augroup END
-let g:NERDTreeNodeDelimiter = "\u00a0"
-let g:NERDTreeDirArrowExpandable = ''
-let g:NERDTreeDirArrowCollapsible = ''
-let g:DevIconsEnableFoldersOpenClose = 1
-
-
-
-" :let $RBENV_VERSION="2.6.6"
-set tabstop=2 shiftwidth=2 expandtab
-set mmp=5000
-let g:go_version_warning = 0
