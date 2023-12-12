@@ -9,6 +9,8 @@ alias gfhf="git flow hotfix finish"
 alias gps="git push"
 alias kdash="minikube dashboard --port=55912 --url"
 
+alias acli="arduino-cli"
+
 alias cleanup-docker='docker image prune -a --filter "until=24h" && docker container prune --filter "until=24h" '
 export GIT_MERGE_AUTOEDIT=no
 export CF_DIAL_TIMEOUT=10

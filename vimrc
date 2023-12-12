@@ -148,6 +148,7 @@ else
 
   Plug 'chrisbra/vim-diff-enhanced', &diff ? {} : {'on': []}
   Plug 'yegappan/grep',           &diff ? {'on': []} : {} " Full text search via ack-grep or ag
+
   Plug 'preservim/nerdtree',                        &diff ? {'on': []} : {'on': 'NERDTreeToggle'}     " Directory Tree
 
   if &diff
@@ -165,6 +166,7 @@ Plug 'ryanoasis/vim-devicons',                    &diff ? {'on': []} : {} " Dire
 Plug 'lambdalisue/glyph-palette.vim',             &diff ? {'on': []} : {} " Directory Tree
 
 Plug 'vim-scripts/AnsiEsc.vim'
+Plug 'NewLunarFire/wla-vim'
 
 
 
@@ -186,6 +188,15 @@ else
 endif
 Plug 'ap/vim-css-color',           {'for': ['html', 'haml', 'css']}
 
+" Include user's local vim config
+if filereadable(expand("~/.vimrc.plugins.local"))
+  source ~/.vimrc.plugins.local
+endif
+
+if filereadable(expand("$HOME/_vimrc.plugins.local"))
+  source $HOME/_vimrc.plugins.local
+endif
+
 
 
 " ##############
@@ -200,6 +211,8 @@ Plug 'lifepillar/vim-solarized8'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'rakr/vim-one'
 Plug 'rakr/vim-two-firewatch'
+"Plug 'tribela/vim-transparent'
+Plug 'folke/tokyonight.nvim'
 
 let g:gruvbox_contrast_dark='high'
 let g:gruvbox_contrast_light='high'
@@ -209,7 +222,11 @@ call plug#end()
 
 set completeopt=menu,menuone,noselect
 
-colorscheme gruvbox
+if has('nvim')
+  colorscheme tokyonight
+else
+  colorscheme gruvbox
+endif
 
 set background=dark
 
@@ -332,8 +349,11 @@ let g:ale_sign_error = '❗'
 let g:ale_sign_warning = '⚠️ '
 let g:ale_linters = {
       \ 'elixir':     ['dialyxir'],
-      \ 'go':         ['golangci-lint']
+      \ 'go':         ['golangci-lint'],
+      \ 'cpp':        ['cc', 'ccls', 'clangcheck'],
       \ }
+"      \ 'c':          ['clang'],
+let g:ale_linters_explicit = 1
 
 
 let g:ale_fixers = {
@@ -343,7 +363,8 @@ let g:ale_fixers = {
       \ 'css':        ['prettier'],
       \ 'html':       ['prettier'],
       \ 'go':         ['gofumpt'],
-      \ 'c':          ['clang-format', 'astyle', 'clangtidy'],
+      \ 'c':          ['clang-format'],
+      \ 'cpp':        ['clang-format'],
       \ 'elixir':     ['mix_format'],
       \ 'json':       ['fixjson'],
       \ 'sh':         ['shfmt'],
@@ -353,6 +374,10 @@ let g:ale_fixers = {
 let g:ale_ruby_rubocop_executable = 'bundle'
 let g:ale_go_golangci_lint_options = ' --fast '
 
+
+let g:ale_cpp_clang_format_options = {
+\   'style': 'google'
+\}
 
 
 " CtrlP config
@@ -468,12 +493,13 @@ nnoremap <leader>P "+P
 vnoremap <leader>p "+p
 vnoremap <leader>P "+P
 
+
 if has('nvim')
-map <F2> :NvimTreeToggle<CR>
-map <Leader>n :NvimTreeToggle<CR>
+  map <F2> :NvimTreeToggle<CR>
+  map <Leader>n :NvimTreeToggle<CR>
 else
-map <F2> :NERDTreeToggle<CR>
-map <Leader>n :NERDTreeToggle<CR>
+  map <F2> :NERDTreeToggle<CR>
+  map <Leader>n :NERDTreeToggle<CR>
 endif
 
 " ctags tags file generation for the current directory
@@ -495,7 +521,7 @@ nmap <F8> :let g:gruvbox_contrast_light='soft' <CR>:set background=light<CR>
 nmap <F9> :let g:gruvbox_contrast_light='medium' <CR>:set background=light<CR>
 nmap <F10> :let g:gruvbox_contrast_light='hard' <CR>:set background=light<CR>
 
-nmap <F11> :hi Normal guibg=NONE ctermbg=NONE<CR>
+nmap <F11> :TransparentToggle<CR>
 
 " Autoformat
 au FileType xml nnoremap <leader>x :%!xmllint --format -<CR>
@@ -503,6 +529,9 @@ au FileType json nnoremap <leader>x :%!jq .<CR>
 
 map <F4> :%s/\s\+$//e
 
+
+map <leader>1 :%!xxd<CR>:set ft=xxd<CR>
+map <leader>2 :%!xxd -r<CR>
 
 augroup my-glyph-palette
   autocmd! *

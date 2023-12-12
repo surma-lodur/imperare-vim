@@ -1,0 +1,8 @@
+Plug 'Exafunction/codeium.vim', { 'branch': 'main' }
+
+
+set statusline+=\{…\}%3{codeium#GetStatusString()}
+
+imap <C-;>   <Cmd>call codeium#CycleCompletions(1)<CR>
+imap <C-,>   <Cmd>call codeium#CycleCompletions(-1)<CR>
+imap <C-x>   <Cmd>call codeium#Clear()<CR>
